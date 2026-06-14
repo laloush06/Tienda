@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Carrito - FUTBOL STORE
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/css/styles.css">
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <%- include("../partials/header") %>
+
+    <!-- CARRITO -->
+
+    <main class="cart-page">
+
+        <h1>
+            Mi carrito
+        </h1>
+
+        <!-- ITEMS -->
+
+        <div
+            id="cartContainer"
+            class="cart-container">
+
+        </div>
+
+        <!-- TOTAL -->
+
+        <div
+            id="cartTotal"
+            class="cart-total">
+
+            <h2>
+                Total: $0
+            </h2>
+
+        </div>
+
+        <!-- ACTIONS -->
+
+        <div class="cart-actions">
+
+            <button
+                id="clearCartBtn"
+                class="clear-cart-btn">
+
+                Vaciar carrito
+
+            </button>
+
+            <button
+                id="whatsappBtn"
+                class="whatsapp-cart-btn">
+
+                Enviar pedido por WhatsApp
+
+            </button>
+
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+
+    <%- include("../partials/footer") %>
+
+    <script>
+
+        // =========================
+        // CONTADOR HEADER
+        // =========================
+
+        function actualizarContador(){
+
+            const cart =
+                JSON.parse(
+                    localStorage.getItem("cart")
+                ) || [];
+
+            const total =
+                cart.reduce(
+                    (acc, item) =>
+                        acc + item.cantidad,
+                    0
+                );
+
+            document
+                .getElementById("cartCount")
+                .textContent = total;
+
+        }
+
+        // =========================
+        // RENDER CARRITO
+        // =========================
+
+        function renderCart(){
+
+            const cartContainer =
+                document.getElementById(
+                    "cartContainer"
+                );
+
+            const cartTotal =
+                document.getElementById(
+                    "cartTotal"
+                );
+
+            let cart =
+                JSON.parse(
+                    localStorage.getItem("cart")
+                ) || [];
+
+            if(cart.length === 0){
+
+                cartContainer.innerHTML = `
+
+                    <div class="empty-cart">
+
+                        <h2>
+                            Tu carrito está vacío
+                        </h2>
+
+                    </div>
+
+                `;
+
+                cartTotal.innerHTML = `
+                    <h2>Total: $0</h2>
+                `;
+
+                return;
+
+            }
+
+            cartContainer.innerHTML = "";
+
+            let total = 0;
+
+            cart.forEach((item, index) => {
+
+                const subtotal =
+                    item.precio *
+                    item.cantidad;
+
+                total += subtotal;
+
+                cartContainer.innerHTML += `
+
+                    <article class="cart-item">
+
+                        <div>
+
+                            <h3>
+                                ${item.nombre}
+                            </h3>
+
+                            <p>
+                                Talle:
+                                ${item.talle}
+                            </p>
+
+                            <p>
+                                Cantidad:
+                                ${item.cantidad}
+                            </p>
+
+                            <p>
+                                Subtotal:
+                                $${subtotal.toLocaleString("es-AR")}
+                            </p>
+
+                        </div>
+
+                        <button
+                            class="remove-btn"
+                            onclick="removeItem(${index})">
+
+                            Eliminar
+
+                        </button>
+
+                    </article>
+
+                `;
+
+            });
+
+            cartTotal.innerHTML = `
+
+                <h2>
+
+                    Total:
+                    $${total.toLocaleString("es-AR")}
+
+                </h2>
+
+            `;
+
+        }
+
+        // =========================
+        // REMOVE ITEM
+        // =========================
+
+        function removeItem(index){
+
+            let cart =
+                JSON.parse(
+                    localStorage.getItem("cart")
+                ) || [];
+
+            cart.splice(index, 1);
+
+            localStorage.setItem(
+                "cart",
+                JSON.stringify(cart)
+            );
+
+            renderCart();
+
+            actualizarContador();
+
+        }
+
+        // =========================
+        // CLEAR CART
+        // =========================
+
+        document
+            .getElementById("clearCartBtn")
+            .addEventListener("click", () => {
+
+                localStorage.removeItem("cart");
+
+                renderCart();
+
+                actualizarContador();
+
+            });
+
+        // =========================
+        // WHATSAPP
+        // =========================
+
+        document
+            .getElementById("whatsappBtn")
+            .addEventListener("click", () => {
+
+                const cart =
+                    JSON.parse(
+                        localStorage.getItem("cart")
+                    ) || [];
+
+                if(cart.length === 0){
+
+                    alert(
+                        "El carrito está vacío"
+                    );
+
+                    return;
+
+                }
+
+                let mensaje =
+                    "Hola, estoy interesado en:%0A%0A";
+
+                let total = 0;
+
+                cart.forEach(item => {
+
+                    const subtotal =
+                        item.precio *
+                        item.cantidad;
+
+                    total += subtotal;
+
+                    mensaje +=
+`
+- ${item.nombre}
+Talle: ${item.talle}
+Cantidad: ${item.cantidad}
+Subtotal: $${subtotal.toLocaleString("es-AR")}
+
+`;
+
+                });
+
+                mensaje +=
+`
+%0ATOTAL: $${total.toLocaleString("es-AR")}
+`;
+
+                window.open(
+                    `https://wa.me/5493510000000?text=${encodeURIComponent(mensaje)}`,
+                    "_blank"
+                );
+
+            });
+
+        // =========================
+        // INIT
+        // =========================
+
+        renderCart();
+
+        actualizarContador();
+
+    </script>
+
+</body>
+
+</html>

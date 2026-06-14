@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Editar Producto
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/css/styles.css">
+
+</head>
+
+<body>
+
+    <%- include("../partials/header") %>
+
+    <main class="cart-page">
+
+        <h1>
+            Editar Producto
+        </h1>
+
+        <form
+            action="/admin/editar/<%= producto.id %>"
+            method="POST"
+            class="admin-form">
+
+            <input
+                type="text"
+                name="nombre"
+                value="<%= producto.nombre %>"
+                required>
+
+            <input
+                type="number"
+                name="precio"
+                value="<%= producto.precio %>"
+                required>
+
+            <input
+                type="text"
+                name="equipo"
+                value="<%= producto.equipo %>"
+                required>
+
+            <input
+                type="text"
+                name="categoria"
+                value="<%= producto.categoria %>"
+                required>
+
+            <input
+                type="text"
+                name="talles"
+                value="<%= producto.talles.join(',') %>"
+                required>
+
+            <input
+                type="text"
+                name="imagenes"
+                value="<%= producto.imagenes.join(',') %>"
+                required>
+
+            <button type="submit">
+
+                Guardar cambios
+
+            </button>
+
+        </form>
+
+    </main>
+
+</body>
+
+</html>

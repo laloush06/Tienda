@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Admin - FUTBOL STORE
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/css/styles.css">
+
+</head>
+
+<body>
+
+    <%- include("../partials/header") %>
+
+    <main class="cart-page">
+
+        <h1>
+            Panel Admin
+        </h1>
+
+        <!-- FORM -->
+
+        <form
+            action="/admin/agregar"
+            method="POST"
+            enctype="multipart/form-data"
+            class="admin-form">
+
+            <input
+                type="text"
+                name="nombre"
+                placeholder="Nombre del producto"
+                required>
+
+            <input
+                type="number"
+                name="precio"
+                placeholder="Precio"
+                required>
+
+            <!-- EQUIPO -->
+
+            <select
+                name="equipo"
+                required>
+
+                <option value="">
+                    Seleccionar equipo
+                </option>
+
+                <option value="Argentina">
+                    Argentina
+                </option>
+
+                <option value="Brasil">
+                    Brasil
+                </option>
+
+                <option value="Francia">
+                    Francia
+                </option>
+
+                <option value="Boca">
+                    Boca
+                </option>
+
+                <option value="River">
+                    River
+                </option>
+
+                <option value="Barcelona">
+                    Barcelona
+                </option>
+
+                <option value="Real Madrid">
+                    Real Madrid
+                </option>
+
+            </select>
+
+            <!-- TIPO -->
+
+            <select
+                name="tipo"
+                required>
+
+                <option value="">
+                    Club o Selección
+                </option>
+
+                <option value="Club">
+                    Club
+                </option>
+
+                <option value="Seleccion">
+                    Selección
+                </option>
+
+            </select>
+
+            <!-- CATEGORIA -->
+
+            <select
+                name="categoria"
+                required>
+
+                <option value="">
+                    Categoría
+                </option>
+
+                <option value="Camiseta">
+                    Camiseta
+                </option>
+
+                <option value="Short">
+                    Short
+                </option>
+
+                <option value="Pantalon">
+                    Pantalon
+                </option>
+
+                <option value="Campera">
+                    Campera
+                </option>
+
+                <option value="Buzo">
+                    Buzo
+                </option>
+
+                <option value="Conjunto">
+                    Conjunto
+                </option>
+
+            </select>
+
+            <!-- IMAGENES -->
+
+            <input
+                type="file"
+                name="imagenes"
+                multiple
+                accept="image/*"
+                required>
+
+            <!-- TALLES -->
+
+            <div class="admin-talles">
+
+                <h3>
+                    Talles disponibles
+                </h3>
+
+                <div class="admin-talles-grid">
+
+                    <label><input type="checkbox" name="talles" value="XS"> XS</label>
+
+                    <label><input type="checkbox" name="talles" value="S"> S</label>
+
+                    <label><input type="checkbox" name="talles" value="M"> M</label>
+
+                    <label><input type="checkbox" name="talles" value="L"> L</label>
+
+                    <label><input type="checkbox" name="talles" value="XL"> XL</label>
+
+                    <label><input type="checkbox" name="talles" value="XXL"> XXL</label>
+
+                </div>
+
+            </div>
+
+            <button type="submit">
+
+                Agregar producto
+
+            </button>
+
+        </form>
+
+        <!-- PRODUCTOS -->
+
+        <div class="cart-container">
+
+            <% productos.forEach(producto => { %>
+
+                <article class="cart-item">
+
+                    <div class="admin-product-left">
+
+                        <img
+                            src="<%= producto.imagenes[0] %>"
+                            class="admin-product-image">
+
+                        <div>
+
+                            <h3>
+                                <%= producto.nombre %>
+                            </h3>
+
+                            <p>
+                                $<%= producto.precio.toLocaleString("es-AR") %>
+                            </p>
+
+                            <p>
+                                Equipo:
+                                <%= producto.equipo %>
+                            </p>
+
+                            <p>
+                                Tipo:
+                                <%= producto.tipo %>
+                            </p>
+
+                            <p>
+                                Categoría:
+                                <%= producto.categoria %>
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="admin-buttons">
+
+                        <a
+                            href="/admin/editar/<%= producto.id %>"
+                            class="go-cart-btn">
+
+                            Editar
+
+                        </a>
+
+                        <form
+                            action="/admin/eliminar/<%= producto.id %>"
+                            method="POST">
+
+                            <button
+                                class="remove-btn">
+
+                                Eliminar
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </article>
+
+            <% }) %>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

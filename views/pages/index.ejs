@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>
+        FUTBOL STORE
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/css/styles.css">
+
+</head>
+
+<body>
+
+    <%- include("../partials/header") %>
+
+    <!-- MENU -->
+
+    <nav class="menu">
+
+        <ul>
+
+            <li><a href="/">Inicio</a></li>
+            <li><a href="#">Selecciones</a></li>
+            <li><a href="#">Clubes</a></li>
+            <li><a href="#">Retro</a></li>
+            <li><a href="#">Entrenamiento</a></li>
+            <li><a href="#">Ofertas</a></li>
+
+        </ul>
+
+    </nav>
+
+    <!-- CONTENIDO -->
+
+    <main class="container">
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar">
+
+            <div class="sidebar-top">
+
+                <h3>
+                    Filtros
+                </h3>
+
+                <button
+                    id="clearFiltersBtn"
+                    class="clear-filters-btn">
+
+                    Limpiar filtros
+
+                </button>
+
+            </div>
+
+            <!-- TALLES -->
+
+            <div class="filter-group">
+
+                <h4>Talles</h4>
+
+                <label><input type="checkbox" class="filter-size" value="XS"> XS</label>
+
+                <label><input type="checkbox" class="filter-size" value="S"> S</label>
+
+                <label><input type="checkbox" class="filter-size" value="M"> M</label>
+
+                <label><input type="checkbox" class="filter-size" value="L"> L</label>
+
+                <label><input type="checkbox" class="filter-size" value="XL"> XL</label>
+
+                <label><input type="checkbox" class="filter-size" value="XXL"> XXL</label>
+
+            </div>
+
+            <!-- INDUMENTARIA -->
+
+            <div class="filter-group">
+
+                <h4>
+                    Indumentaria
+                </h4>
+
+                <label><input type="checkbox" class="filter-type" value="Camiseta"> Camiseta</label>
+
+                <label><input type="checkbox" class="filter-type" value="Short"> Short</label>
+
+                <label><input type="checkbox" class="filter-type" value="Pantalon"> Pantalon</label>
+
+                <label><input type="checkbox" class="filter-type" value="Campera"> Campera</label>
+
+                <label><input type="checkbox" class="filter-type" value="Buzo"> Buzo</label>
+
+                <label><input type="checkbox" class="filter-type" value="Conjunto"> Conjunto</label>
+
+            </div>
+
+            <!-- CLUBES -->
+
+            <div class="filter-group">
+
+                <h4>
+                    Clubes
+                </h4>
+
+                <label><input type="checkbox" class="filter-team" value="Boca"> Boca</label>
+
+                <label><input type="checkbox" class="filter-team" value="River"> River</label>
+
+                <label><input type="checkbox" class="filter-team" value="Barcelona"> Barcelona</label>
+
+                <label><input type="checkbox" class="filter-team" value="Real Madrid"> Real Madrid</label>
+
+            </div>
+
+            <!-- SELECCIONES -->
+
+            <div class="filter-group">
+
+                <h4>
+                    Selecciones
+                </h4>
+
+                <label><input type="checkbox" class="filter-team" value="Argentina"> Argentina</label>
+
+                <label><input type="checkbox" class="filter-team" value="Brasil"> Brasil</label>
+
+                <label><input type="checkbox" class="filter-team" value="Francia"> Francia</label>
+
+            </div>
+
+        </aside>
+
+        <!-- PRODUCTOS -->
+
+        <section class="products">
+
+            <% productos.forEach(producto => { %>
+
+                <article class="product-card">
+
+                    <a
+                        href="/producto/<%= producto.id %>"
+                        class="product-link">
+
+                        <img
+                            src="<%= producto.imagenes[0] %>"
+                            alt="<%= producto.nombre %>">
+
+                        <div class="product-info-card">
+
+                            <h3>
+                                <%= producto.nombre %>
+                            </h3>
+
+                            <p class="price">
+
+                                $<%= producto.precio.toLocaleString("es-AR") %>
+
+                            </p>
+
+                            <p class="product-meta">
+
+                                Equipo:
+                                <%= producto.equipo %>
+
+                            </p>
+
+                            <p class="product-meta">
+
+                                Categoría:
+                                <%= producto.categoria %>
+
+                            </p>
+
+                            <p class="product-meta">
+
+                                Talles:
+                                <%= producto.talles.join(" - ") %>
+
+                            </p>
+
+                            <button class="view-product-btn">
+
+                                Ver producto
+
+                            </button>
+
+                        </div>
+
+                    </a>
+
+                </article>
+
+            <% }) %>
+
+        </section>
+
+    </main>
+
+    <%- include("../partials/footer") %>
+
+    <script src="/js/main.js"></script>
+
+</body>
+
+</html>

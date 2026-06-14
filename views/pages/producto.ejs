@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>
+        <%= producto.nombre %>
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/css/styles.css">
+
+</head>
+
+<body>
+
+    <!-- TOAST -->
+
+    <div
+        id="toast"
+        class="toast">
+
+        Producto agregado al carrito
+
+    </div>
+
+    <!-- HEADER -->
+
+    <%- include("../partials/header") %>
+
+    <!-- PRODUCT DETAIL -->
+
+    <main class="product-detail">
+
+        <!-- GALLERY -->
+
+        <section class="gallery">
+
+            <img
+                id="mainImage"
+                class="main-image"
+                src="<%= producto.imagenes[0] %>"
+                alt="<%= producto.nombre %>">
+
+            <div class="thumbnails">
+
+                <% producto.imagenes.forEach(imagen => { %>
+
+                    <img
+                        src="<%= imagen %>"
+                        class="thumbnail-image"
+                        onclick="changeImage('<%= imagen %>')">
+
+                <% }) %>
+
+            </div>
+
+        </section>
+
+        <!-- PRODUCT INFO -->
+
+        <section class="product-info">
+
+            <span class="product-category">
+
+                <%= producto.categoria %>
+                •
+
+                <%= producto.equipo %>
+
+            </span>
+
+            <h1>
+                <%= producto.nombre %>
+            </h1>
+
+            <p class="product-price">
+
+                $<%= producto.precio.toLocaleString("es-AR") %>
+
+            </p>
+
+            <p class="product-description">
+
+                Producto oficial importado.
+                Calidad premium.
+                Ideal para colección o uso diario.
+
+            </p>
+
+            <!-- TALLES -->
+
+            <div class="size-section">
+
+                <h3>
+                    Seleccionar talle
+                </h3>
+
+                <div
+                    id="sizesContainer"
+                    class="sizes">
+
+                    <% producto.talles.forEach(talle => { %>
+
+                        <button
+                            class="size-btn">
+
+                            <%= talle %>
+
+                        </button>
+
+                    <% }) %>
+
+                </div>
+
+            </div>
+
+            <!-- CANTIDAD -->
+
+            <div class="quantity-section">
+
+                <h3>
+                    Cantidad
+                </h3>
+
+                <input
+                    id="quantityInput"
+                    type="number"
+                    value="1"
+                    min="1">
+
+            </div>
+
+            <!-- BOTONES -->
+
+            <button
+                id="addToCartBtn"
+                class="buy-btn">
+
+                Agregar al carrito
+
+            </button>
+
+            <a
+                href="/carrito"
+                class="go-cart-btn">
+
+                Ir al carrito
+
+            </a>
+
+        </section>
+
+    </main>
+
+    <!-- RELACIONADOS -->
+
+    <section class="related-products-section">
+
+        <h2>
+            También te puede interesar
+        </h2>
+
+        <div class="products">
+
+            <% productos
+                .filter(p =>
+                    p.id !== producto.id &&
+                    (
+                        p.equipo === producto.equipo ||
+                        p.categoria === producto.categoria
+                    )
+                )
+                .slice(0,4)
+                .forEach(relacionado => { %>
+
+                <article class="product-card">
+
+                    <a
+                        href="/producto/<%= relacionado.id %>"
+                        class="product-link">
+
+                        <img
+                            src="<%= relacionado.imagenes[0] %>"
+                            alt="<%= relacionado.nombre %>">
+
+                        <div class="product-info-card">
+
+                            <h3>
+                                <%= relacionado.nombre %>
+                            </h3>
+
+                            <p class="price">
+
+                                $<%= relacionado.precio.toLocaleString("es-AR") %>
+
+                            </p>
+
+                        </div>
+
+                    </a>
+
+                </article>
+
+            <% }) %>
+
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+
+    <%- include("../partials/footer") %>
+
+    <script>
+
+        // =========================
+        // CAMBIO IMAGEN
+        // =========================
+
+        function changeImage(src){
+
+            document
+                .getElementById("mainImage")
+                .src = src;
+
+        }
+
+        // =========================
+        // CONTADOR CARRITO
+        // =========================
+
+        function actualizarContador(){
+
+            const cart =
+                JSON.parse(
+                    localStorage.getItem("cart")
+                ) || [];
+
+            const total =
+                cart.reduce(
+                    (acc, item) =>
+                        acc + item.cantidad,
+                    0
+                );
+
+            document
+                .getElementById("cartCount")
+                .textContent = total;
+
+        }
+
+        // =========================
+        // TOAST
+        // =========================
+
+        function mostrarToast(mensaje){
+
+            const toast =
+                document.getElementById("toast");
+
+            toast.textContent =
+                mensaje;
+
+            toast.classList.add(
+                "show-toast"
+            );
+
+            setTimeout(() => {
+
+                toast.classList.remove(
+                    "show-toast"
+                );
+
+            }, 2500);
+
+        }
+
+        // =========================
+        // TALLES
+        // =========================
+
+        let talleSeleccionado = null;
+
+        const sizeButtons =
+            document.querySelectorAll(".size-btn");
+
+        sizeButtons.forEach(button => {
+
+            button.addEventListener("click", () => {
+
+                sizeButtons.forEach(btn =>
+                    btn.classList.remove(
+                        "active-size"
+                    )
+                );
+
+                button.classList.add(
+                    "active-size"
+                );
+
+                talleSeleccionado =
+                    button.textContent.trim();
+
+            });
+
+        });
+
+        // =========================
+        // CARRITO
+        // =========================
+
+        document
+            .getElementById("addToCartBtn")
+            .addEventListener("click", () => {
+
+                if(!talleSeleccionado){
+
+                    mostrarToast(
+                        "Seleccioná un talle"
+                    );
+
+                    return;
+
+                }
+
+                const cantidad =
+                    parseInt(
+                        document.getElementById(
+                            "quantityInput"
+                        ).value
+                    );
+
+                let cart =
+                    JSON.parse(
+                        localStorage.getItem("cart")
+                    ) || [];
+
+                const existente =
+                    cart.find(item =>
+                        item.id === <%= producto.id %> &&
+                        item.talle === talleSeleccionado
+                    );
+
+                if(existente){
+
+                    existente.cantidad += cantidad;
+
+                }else{
+
+                    cart.push({
+
+                        id:<%= producto.id %>,
+
+                        nombre:"<%= producto.nombre %>",
+
+                        precio:<%= producto.precio %>,
+
+                        talle:talleSeleccionado,
+
+                        cantidad
+
+                    });
+
+                }
+
+                localStorage.setItem(
+                    "cart",
+                    JSON.stringify(cart)
+                );
+
+                actualizarContador();
+
+                mostrarToast(
+                    "✓ Producto agregado"
+                );
+
+            });
+
+        actualizarContador();
+
+    </script>
+
+</body>
+
+</html>
