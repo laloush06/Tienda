@@ -1,181 +1,238 @@
 [
-    {
-        "id": 1,
-        "nombre": "Camiseta Argentina Titular 2026",
-        "tipo": "Camiseta",
-        "categoria": "Selecciones",
-        "equipo": "Argentina",
-        "temporada": "2026",
-        "precio": 39999,
-        "imagenes": [
-            "/img/argentina.jpg",
-            "/img/argentina2.jpg",
-            "/img/argentina3.jpg",
-            "/img/argentina4.jpg"
-        ],
-        "talles": [
-            "S",
-            "M",
-            "L",
-            "XL",
-            "XXL"
-        ]
-    },
-    {
-        "id": 2,
-        "nombre": "Camiseta Boca Titular 2026",
-        "tipo": "Camiseta",
-        "categoria": "Clubes",
-        "equipo": "Boca",
-        "temporada": "2026",
-        "precio": 42999,
-        "imagenes": [
-            "/img/boca.jpg",
-            "/img/boca2.jpg",
-            "/img/boca3.jpg",
-            "/img/boca4.jpg"
-        ],
-        "talles": [
-            "S",
-            "M",
-            "L",
-            "XL"
-        ]
-    },
-    {
-        "id": 3,
-        "nombre": "Camiseta River Titular 2026",
-        "tipo": "Camiseta",
-        "categoria": "Clubes",
-        "equipo": "River",
-        "temporada": "2026",
-        "precio": 42999,
-        "imagenes": [
-            "/img/river.jpg",
-            "/img/river2.jpg",
-            "/img/river3.jpg",
-            "/img/river4.jpg"
-        ],
-        "talles": [
-            "S",
-            "M",
-            "L",
-            "XL"
-        ]
-    },
-    {
-        "id": 4,
-        "nombre": "Hola Pichi",
-        "precio": 1,
-        "equipo": "Boca",
-        "categoria": "Camiseta",
-        "talles": [
-            "S",
-            "m",
-            "X",
-            "L"
-        ],
-        "imagenes": [
-            "/img/boca"
-        ]
-    },
-    {
-        "id": 5,
-        "nombre": "caca",
-        "precio": 1,
-        "equipo": "Argentina",
-        "tipo": "Club",
-        "categoria": "Short",
-        "talles": [
-            "S",
-            "M"
-        ],
-        "imagenes": [
-            "/img"
-        ]
-    },
-    {
-        "id": 6,
-        "nombre": "Fantasma",
-        "precio": 5000000,
-        "equipo": "River",
-        "tipo": "Club",
-        "categoria": "Camiseta",
-        "talles": [
-            "S"
-        ],
-        "imagenes": [
-            "/uploads/1781454897297-descarga.jfif"
-        ]
-    },
-    {
-        "id": 7,
-        "nombre": "a",
-        "precio": 1,
-        "equipo": "Argentina",
-        "tipo": "Club",
-        "categoria": "Buzo",
-        "talles": [
-            "S",
-            "M",
-            "XL"
-        ],
-        "imagenes": [
-            "/uploads/1781457183488-logo-removebg-preview.png"
-        ]
-    },
-    {
-        "id": 8,
-        "nombre": "Camiseta Boca Titular",
-        "precio": 149999,
-        "equipo": "Boca",
-        "tipo": "Club",
-        "categoria": "Camiseta",
-        "talles": [
-            "XS",
-            "S",
-            "M",
-            "L",
-            "XL",
-            "XXL"
-        ],
-        "imagenes": [
-            "/uploads/1781466448837-20358268-1200-auto.webp",
-            "/uploads/1781466448837-20358269-1200-auto.webp",
-            "/uploads/1781466448839-20358270-1200-auto.webp"
-        ]
-    },
-    {
-        "id": 9,
-        "nombre": "Camiseta Riber",
-        "precio": 10000,
-        "equipo": "River",
-        "tipo": "Club",
-        "categoria": "Camiseta",
-        "talles": [
-            "XXL"
-        ],
-        "imagenes": [
-            "/uploads/1781466876925-20613805-1200-auto.webp",
-            "/uploads/1781466876926-20613806-1200-auto.webp",
-            "/uploads/1781466876926-20613807-1200-auto.webp"
-        ]
-    },
-    {
-        "id": 10,
-        "nombre": "1",
-        "precio": 1,
-        "equipo": "Argentina",
-        "tipo": "Seleccion",
-        "categoria": "Short",
-        "talles": [
-            "M"
-        ],
-        "imagenes": [
-            "/uploads/1781467117101-pixelcut-export.jpeg"
-        ],
-        "nuevo": true,
-        "oferta": false,
-        "destacado": false
-    }
+  {
+    "id": 1,
+    "nombre": "Camiseta Argentina Titular 2026",
+    "tipo": "Camiseta",
+    "categoria": "Selecciones",
+    "equipo": "Argentina",
+    "temporada": "2026",
+    "precio": 39999,
+    "imagenes": [
+      "/img/argentina.jpg",
+      "/img/argentina2.jpg",
+      "/img/argentina3.jpg",
+      "/img/argentina4.jpg"
+    ],
+    "talles": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ]
+  },
+  {
+    "id": 2,
+    "nombre": "Camiseta Boca Titular 2026",
+    "tipo": "Camiseta",
+    "categoria": "Clubes",
+    "equipo": "Boca",
+    "temporada": "2026",
+    "precio": 42999,
+    "imagenes": [
+      "/img/boca.jpg",
+      "/img/boca2.jpg",
+      "/img/boca3.jpg",
+      "/img/boca4.jpg"
+    ],
+    "talles": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ]
+  },
+  {
+    "id": 3,
+    "nombre": "Camiseta River Titular 2026",
+    "tipo": "Camiseta",
+    "categoria": "Clubes",
+    "equipo": "River",
+    "temporada": "2026",
+    "precio": 42999,
+    "imagenes": [
+      "/img/river.jpg",
+      "/img/river2.jpg",
+      "/img/river3.jpg",
+      "/img/river4.jpg"
+    ],
+    "talles": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ]
+  },
+  {
+    "id": 4,
+    "nombre": "Hola Pichi",
+    "precio": 1,
+    "equipo": "Boca",
+    "categoria": "Camiseta",
+    "talles": [
+      "S",
+      "m",
+      "X",
+      "L"
+    ],
+    "imagenes": [
+      "/img/boca"
+    ]
+  },
+  {
+    "id": 6,
+    "nombre": "Fantasma",
+    "precio": 5000000,
+    "equipo": "River",
+    "tipo": "Club",
+    "categoria": "Camiseta",
+    "talles": [
+      "S"
+    ],
+    "imagenes": [
+      "/uploads/1781454897297-descarga.jfif"
+    ],
+    "descripcion": "Hijo BoBo",
+    "nuevo": false,
+    "oferta": false,
+    "destacado": false
+  },
+  {
+    "id": 7,
+    "nombre": "a",
+    "precio": 1,
+    "equipo": "Argentina",
+    "tipo": "Club",
+    "categoria": "Buzo",
+    "talles": [
+      "S",
+      "M",
+      "XL"
+    ],
+    "imagenes": [
+      "/uploads/1781457183488-logo-removebg-preview.png"
+    ]
+  },
+  {
+    "id": 8,
+    "nombre": "Camiseta Boca Titular",
+    "precio": 149999,
+    "equipo": "Boca",
+    "tipo": "Club",
+    "categoria": "Camiseta",
+    "talles": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "imagenes": [
+      "/uploads/1781466448837-20358268-1200-auto.webp",
+      "/uploads/1781466448837-20358269-1200-auto.webp",
+      "/uploads/1781466448839-20358270-1200-auto.webp"
+    ],
+    "nuevo": false,
+    "oferta": false,
+    "destacado": false
+  },
+  {
+    "id": 9,
+    "nombre": "Camiseta Riber",
+    "precio": 10000,
+    "equipo": "River",
+    "tipo": "Club",
+    "categoria": "Camiseta",
+    "talles": [
+      "XXL"
+    ],
+    "imagenes": [
+      "/uploads/1781466876925-20613805-1200-auto.webp",
+      "/uploads/1781466876926-20613806-1200-auto.webp",
+      "/uploads/1781466876926-20613807-1200-auto.webp"
+    ]
+  },
+  {
+    "id": 10,
+    "nombre": "1",
+    "precio": 1,
+    "equipo": "Argentina",
+    "tipo": "Seleccion",
+    "categoria": "Short",
+    "talles": [
+      "M"
+    ],
+    "imagenes": [
+      "/uploads/1781467117101-pixelcut-export.jpeg"
+    ],
+    "nuevo": true,
+    "oferta": false,
+    "destacado": false
+  },
+  {
+    "id": 11,
+    "nombre": "a",
+    "precio": 1,
+    "equipo": "Brasil",
+    "tipo": "Seleccion",
+    "categoria": "Short",
+    "talles": [
+      "L"
+    ],
+    "imagenes": [
+      "/uploads/1781467377962-estrella-Photoroom.png"
+    ],
+    "nuevo": false,
+    "oferta": true,
+    "destacado": false
+  },
+  {
+    "id": 12,
+    "nombre": "1",
+    "precio": 1,
+    "equipo": "Boca",
+    "categoria": "Camiseta",
+    "talles": [
+      "S",
+      "L",
+      "XXL"
+    ],
+    "imagenes": [],
+    "nuevo": true,
+    "oferta": false,
+    "destacado": false
+  },
+  {
+    "id": 13,
+    "nombre": "Camiseta Argentina",
+    "precio": 149999,
+    "equipo": "Argentina",
+    "categoria": "Camiseta",
+    "descripcion": "Camiseta Titular",
+    "talles": [
+      "S"
+    ],
+    "imagenes": [
+      "/img/1781469797654-descarga (1).jfif"
+    ],
+    "nuevo": true,
+    "oferta": false,
+    "destacado": false
+  },
+  {
+    "id": 14,
+    "nombre": "1",
+    "precio": 1,
+    "equipo": "Boca",
+    "categoria": "Camiseta",
+    "descripcion": "S1",
+    "talles": [
+      "M"
+    ],
+    "imagenes": [],
+    "nuevo": false,
+    "oferta": false,
+    "destacado": false
+  }
 ]

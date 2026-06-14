@@ -10,7 +10,7 @@
         content="width=device-width, initial-scale=1.0">
 
     <title>
-        Admin - FUTBOL STORE
+        Admin
     </title>
 
     <link
@@ -21,29 +21,62 @@
 
 <body>
 
+    <%
+        const editar =
+            typeof productoEditar !== "undefined"
+            &&
+            productoEditar;
+    %>
+
     <%- include("../partials/header") %>
 
-    <main class="cart-page">
+    <div class="cart-page">
 
-        <h1>
-            Panel Admin
-        </h1>
+        <!-- TOP -->
+
+        <div class="products-topbar">
+
+            <h1>
+
+                Panel Admin
+
+            </h1>
+
+            <a
+                href="/logout"
+                class="go-cart-btn"
+                style="
+                    width:auto;
+                    padding:14px 20px;
+                ">
+
+                Logout
+
+            </a>
+
+        </div>
 
         <!-- FORM -->
 
         <form
-            action="/admin/agregar"
+
+            class="admin-form"
+
+            action="<%= editar ? '/admin/editar/' + editar.id : '/admin/crear' %>"
+
             method="POST"
-            enctype="multipart/form-data"
-            class="admin-form">
+
+            enctype="multipart/form-data">
 
             <!-- NOMBRE -->
 
             <input
                 type="text"
                 name="nombre"
-                placeholder="Nombre del producto"
-                required>
+                placeholder="Nombre"
+                required
+
+                value="<%= editar ? editar.nombre : '' %>">
 
             <!-- PRECIO -->
 
@@ -51,7 +84,9 @@
                 type="number"
                 name="precio"
                 placeholder="Precio"
-                required>
+                required
+
+                value="<%= editar ? editar.precio : '' %>">
 
             <!-- EQUIPO -->
 
@@ -60,56 +95,33 @@
                 required>
 
                 <option value="">
-                    Seleccionar equipo
+                    Equipo / Selección
                 </option>
 
-                <option value="Argentina">
-                    Argentina
-                </option>
+                <% [
+                    "Boca",
+                    "River",
+                    "Barcelona",
+                    "Real Madrid",
+                    "Argentina",
+                    "Brasil",
+                    "Francia"
+                ].forEach(equipo => { %>
 
-                <option value="Brasil">
-                    Brasil
-                </option>
+                    <option
 
-                <option value="Francia">
-                    Francia
-                </option>
+                        value="<%= equipo %>"
 
-                <option value="Boca">
-                    Boca
-                </option>
+                        <%= editar &&
+                            editar.equipo === equipo
+                            ? 'selected'
+                            : '' %>>
 
-                <option value="River">
-                    River
-                </option>
+                        <%= equipo %>
 
-                <option value="Barcelona">
-                    Barcelona
-                </option>
+                    </option>
 
-                <option value="Real Madrid">
-                    Real Madrid
-                </option>
-
-            </select>
-
-            <!-- TIPO -->
-
-            <select
-                name="tipo"
-                required>
-
-                <option value="">
-                    Club o Selección
-                </option>
-
-                <option value="Club">
-                    Club
-                </option>
-
-                <option value="Seleccion">
-                    Selección
-                </option>
+                <% }) %>
 
             </select>
 
@@ -123,31 +135,84 @@
                     Categoría
                 </option>
 
-                <option value="Camiseta">
-                    Camiseta
-                </option>
+                <% [
+                    "Camiseta",
+                    "Short",
+                    "Pantalon",
+                    "Campera",
+                    "Buzo",
+                    "Conjunto"
+                ].forEach(cat => { %>
 
-                <option value="Short">
-                    Short
-                </option>
+                    <option
 
-                <option value="Pantalon">
-                    Pantalon
-                </option>
+                        value="<%= cat %>"
 
-                <option value="Campera">
-                    Campera
-                </option>
+                        <%= editar &&
+                            editar.categoria === cat
+                            ? 'selected'
+                            : '' %>>
 
-                <option value="Buzo">
-                    Buzo
-                </option>
+                        <%= cat %>
 
-                <option value="Conjunto">
-                    Conjunto
-                </option>
+                    </option>
+
+                <% }) %>
 
             </select>
+
+            <!-- DESCRIPCION -->
+
+            <textarea
+
+                name="descripcion"
+
+                placeholder="Descripción del producto"
+
+                class="admin-description"
+
+                required><%= editar ? editar.descripcion : '' %></textarea>
+
+            <!-- TALLES -->
+
+            <div class="admin-talles">
+
+                <h3>
+                    Talles
+                </h3>
+
+                <div class="admin-talles-grid">
+
+                    <% [
+                        "XS",
+                        "S",
+                        "M",
+                        "L",
+                        "XL",
+                        "XXL"
+                    ].forEach(talle => { %>
+
+                        <label>
+
+                            <input
+                                type="checkbox"
+                                name="talles"
+                                value="<%= talle %>"
+
+                                <%= editar &&
+                                    editar.talles.includes(talle)
+                                    ? 'checked'
+                                    : '' %>>
+
+                            <%= talle %>
+
+                        </label>
+
+                    <% }) %>
+
+                </div>
+
+            </div>
 
             <!-- BADGES -->
 
@@ -157,7 +222,12 @@
 
                     <input
                         type="checkbox"
-                        name="nuevo">
+                        name="nuevo"
+
+                        <%= editar &&
+                            editar.nuevo
+                            ? 'checked'
+                            : '' %>>
 
                     Nuevo
 
@@ -167,7 +237,12 @@
 
                     <input
                         type="checkbox"
-                        name="oferta">
+                        name="oferta"
+
+                        <%= editar &&
+                            editar.oferta
+                            ? 'checked'
+                            : '' %>>
 
                     Oferta
 
@@ -177,7 +252,12 @@
 
                     <input
                         type="checkbox"
-                        name="destacado">
+                        name="destacado"
+
+                        <%= editar &&
+                            editar.destacado
+                            ? 'checked'
+                            : '' %>>
 
                     Destacado
 
@@ -185,58 +265,21 @@
 
             </div>
 
-            <!-- UPLOAD -->
+            <!-- IMAGENES -->
 
             <div class="admin-upload-container">
 
-                <label
-                    for="imageInput"
-                    class="custom-upload">
+                <label class="custom-upload">
 
-                    Agregar imágenes
+                    Seleccionar imágenes
+
+                    <input
+                        type="file"
+                        name="imagenes"
+                        multiple
+                        hidden>
 
                 </label>
-
-                <input
-                    type="file"
-                    id="imageInput"
-                    accept="image/*"
-                    multiple
-                    hidden>
-
-                <input
-                    type="file"
-                    id="realImagesInput"
-                    name="imagenes"
-                    multiple
-                    hidden>
-
-                <div
-                    id="previewContainer"
-                    class="preview-container">
-
-                </div>
-
-            </div>
-
-            <!-- TALLES -->
-
-            <div class="admin-talles">
-
-                <h3>
-                    Talles disponibles
-                </h3>
-
-                <div class="admin-talles-grid">
-
-                    <label><input type="checkbox" name="talles" value="XS"> XS</label>
-                    <label><input type="checkbox" name="talles" value="S"> S</label>
-                    <label><input type="checkbox" name="talles" value="M"> M</label>
-                    <label><input type="checkbox" name="talles" value="L"> L</label>
-                    <label><input type="checkbox" name="talles" value="XL"> XL</label>
-                    <label><input type="checkbox" name="talles" value="XXL"> XXL</label>
-
-                </div>
 
             </div>
 
@@ -244,7 +287,9 @@
 
             <button type="submit">
 
-                Agregar producto
+                <%= editar
+                    ? 'Guardar cambios'
+                    : 'Agregar producto' %>
 
             </button>
 
@@ -256,7 +301,9 @@
 
             <% productos.forEach(producto => { %>
 
-                <article class="cart-item">
+                <div class="cart-item">
+
+                    <!-- IZQUIERDA -->
 
                     <div class="admin-product-left">
 
@@ -266,41 +313,57 @@
 
                         <div>
 
-                            <h3>
+                            <h2>
+
                                 <%= producto.nombre %>
-                            </h3>
+
+                            </h2>
 
                             <p>
+
                                 $<%= producto.precio.toLocaleString("es-AR") %>
+
                             </p>
 
                             <p>
-                                Equipo:
-                                <%= producto.equipo %>
-                            </p>
 
-                            <p>
-                                Categoría:
                                 <%= producto.categoria %>
+
                             </p>
 
                         </div>
 
                     </div>
 
+                    <!-- BOTONES -->
+
                     <div class="admin-buttons">
 
+                        <!-- EDITAR -->
+
                         <a
+
                             href="/admin/editar/<%= producto.id %>"
+
                             class="go-cart-btn">
 
                             Editar
 
                         </a>
 
+                        <!-- ELIMINAR -->
+
                         <form
+
                             action="/admin/eliminar/<%= producto.id %>"
-                            method="POST">
+
+                            method="POST"
+
+                            onsubmit="
+                                return confirm(
+                                    '¿Eliminar producto?'
+                                )
+                            ">
 
                             <button
                                 class="remove-btn">
@@ -313,103 +376,13 @@
 
                     </div>
 
-                </article>
+                </div>
 
             <% }) %>
 
         </div>
 
-    </main>
-
-    <script>
-
-        const imageInput =
-            document.getElementById(
-                "imageInput"
-            );
-
-        const realImagesInput =
-            document.getElementById(
-                "realImagesInput"
-            );
-
-        const previewContainer =
-            document.getElementById(
-                "previewContainer"
-            );
-
-        let allFiles = [];
-
-        imageInput.addEventListener(
-            "change",
-            () => {
-
-                const newFiles =
-                    Array.from(
-                        imageInput.files
-                    );
-
-                allFiles = [
-                    ...allFiles,
-                    ...newFiles
-                ];
-
-                const dataTransfer =
-                    new DataTransfer();
-
-                allFiles.forEach(file => {
-
-                    dataTransfer.items.add(
-                        file
-                    );
-
-                });
-
-                realImagesInput.files =
-                    dataTransfer.files;
-
-                renderPreviews();
-
-            }
-        );
-
-        function renderPreviews(){
-
-            previewContainer.innerHTML = "";
-
-            allFiles.forEach(file => {
-
-                const reader =
-                    new FileReader();
-
-                reader.onload = e => {
-
-                    const img =
-                        document.createElement(
-                            "img"
-                        );
-
-                    img.src =
-                        e.target.result;
-
-                    img.classList.add(
-                        "preview-image"
-                    );
-
-                    previewContainer
-                        .appendChild(img);
-
-                };
-
-                reader.readAsDataURL(
-                    file
-                );
-
-            });
-
-        }
-
-    </script>
+    </div>
 
 </body>
 

@@ -19,7 +19,10 @@ app.set(
 
 app.set(
     "views",
-    path.join(__dirname, "views")
+    path.join(
+        __dirname,
+        "views"
+    )
 );
 
 /* =========================
@@ -38,7 +41,10 @@ app.use(
 
 app.use(
     express.static(
-        path.join(__dirname, "public")
+        path.join(
+            __dirname,
+            "public"
+        )
     )
 );
 
@@ -96,7 +102,9 @@ function verificarAdmin(
 
     }
 
-    res.redirect("/login");
+    res.redirect(
+        "/login"
+    );
 
 }
 
@@ -109,199 +117,226 @@ const adminRoutes =
         "./routes/admin.routes"
     );
 
+app.use(
+    "/admin",
+    verificarAdmin,
+    adminRoutes
+);
+
 /* =========================
    LOGIN
 ========================= */
 
-app.get("/login", (req, res) => {
+app.get(
+    "/login",
+    (req,res)=>{
 
-    res.render(
-        "pages/login",
-        {
-            error:null
-        }
-    );
-
-});
-
-app.post("/login", (req, res) => {
-
-    const {
-        usuario,
-        password
-    } = req.body;
-
-    if(
-        usuario === "admin" &&
-        password === "1234"
-    ){
-
-        req.session.admin = true;
-
-        return res.redirect(
-            "/admin"
+        res.render(
+            "pages/login",
+            {
+                error:null
+            }
         );
 
     }
+);
 
-    res.render(
-        "pages/login",
-        {
-            error:"Usuario o contraseña incorrectos"
+app.post(
+    "/login",
+    (req,res)=>{
+
+        const {
+            usuario,
+            password
+        } = req.body;
+
+        if(
+            usuario === "admin"
+            &&
+            password === "1234"
+        ){
+
+            req.session.admin = true;
+
+            return res.redirect(
+                "/admin"
+            );
+
         }
-    );
 
-});
+        res.render(
+            "pages/login",
+            {
+                error:
+                    "Usuario o contraseña incorrectos"
+            }
+        );
+
+    }
+);
 
 /* =========================
    LOGOUT
 ========================= */
 
-app.get("/logout", (req, res) => {
+app.get(
+    "/logout",
+    (req,res)=>{
 
-    req.session.destroy(() => {
+        req.session.destroy(()=>{
 
-        res.redirect("/login");
+            res.redirect(
+                "/login"
+            );
 
-    });
+        });
 
-});
+    }
+);
 
 /* =========================
    HOME
 ========================= */
 
-app.get("/", (req, res) => {
+app.get(
+    "/",
+    (req,res)=>{
 
-    const productos =
-        obtenerProductos();
+        const productos =
+            obtenerProductos();
 
-    res.render(
-        "pages/index",
-        {
-            productos
-        }
-    );
+        res.render(
+            "pages/index",
+            {
+                productos
+            }
+        );
 
-});
+    }
+);
 
 /* =========================
    DESTACADOS
 ========================= */
 
-app.get("/destacados", (req, res) => {
+app.get(
+    "/destacados",
+    (req,res)=>{
 
-    const productos =
-        obtenerProductos()
-            .filter(
-                p => p.destacado
-            );
+        const productos =
+            obtenerProductos()
+                .filter(
+                    p => p.destacado
+                );
 
-    res.render(
-        "pages/index",
-        {
-            productos
-        }
-    );
+        res.render(
+            "pages/index",
+            {
+                productos
+            }
+        );
 
-});
+    }
+);
 
 /* =========================
    OFERTAS
 ========================= */
 
-app.get("/ofertas", (req, res) => {
+app.get(
+    "/ofertas",
+    (req,res)=>{
 
-    const productos =
-        obtenerProductos()
-            .filter(
-                p => p.oferta
-            );
+        const productos =
+            obtenerProductos()
+                .filter(
+                    p => p.oferta
+                );
 
-    res.render(
-        "pages/index",
-        {
-            productos
-        }
-    );
+        res.render(
+            "pages/index",
+            {
+                productos
+            }
+        );
 
-});
+    }
+);
 
 /* =========================
    NUEVOS
 ========================= */
 
-app.get("/nuevos", (req, res) => {
+app.get(
+    "/nuevos",
+    (req,res)=>{
 
-    const productos =
-        obtenerProductos()
-            .filter(
-                p => p.nuevo
-            );
+        const productos =
+            obtenerProductos()
+                .filter(
+                    p => p.nuevo
+                );
 
-    res.render(
-        "pages/index",
-        {
-            productos
-        }
-    );
+        res.render(
+            "pages/index",
+            {
+                productos
+            }
+        );
 
-});
+    }
+);
 
 /* =========================
    PRODUCTO
 ========================= */
 
-app.get("/producto/:id", (req, res) => {
+app.get(
+    "/producto/:id",
+    (req,res)=>{
 
-    const productos =
-        obtenerProductos();
+        const productos =
+            obtenerProductos();
 
-    const producto =
-        productos.find(
-            p =>
-                p.id ==
-                req.params.id
-        );
+        const producto =
+            productos.find(
+                p =>
+                    p.id ==
+                    req.params.id
+            );
 
-    if(!producto){
+        if(!producto){
 
-        return res.send(
-            "Producto no encontrado"
+            return res.send(
+                "Producto no encontrado"
+            );
+
+        }
+
+        res.render(
+            "pages/producto",
+            {
+                producto,
+                productos
+            }
         );
 
     }
-
-    res.render(
-        "pages/producto",
-        {
-            producto,
-            productos
-        }
-    );
-
-});
+);
 
 /* =========================
    CARRITO
 ========================= */
 
-app.get("/carrito", (req, res) => {
+app.get(
+    "/carrito",
+    (req,res)=>{
 
-    res.render(
-        "pages/carrito"
-    );
+        res.render(
+            "pages/carrito"
+        );
 
-});
-
-/* =========================
-   ADMIN
-========================= */
-
-app.use(
-    "/admin",
-    verificarAdmin,
-    adminRoutes
+    }
 );
 
 /* =========================
@@ -310,11 +345,14 @@ app.use(
 
 const PORT = 3000;
 
-app.listen(PORT, () => {
+app.listen(
+    PORT,
+    ()=>{
 
-    console.log(`
+        console.log(`
 Servidor iniciado:
 http://localhost:${PORT}
-    `);
+        `);
 
-});
+    }
+);

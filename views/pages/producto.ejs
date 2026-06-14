@@ -10,7 +10,9 @@
         content="width=device-width, initial-scale=1.0">
 
     <title>
+
         <%= producto.nombre %>
+
     </title>
 
     <link
@@ -21,171 +23,264 @@
 
 <body>
 
-    <!-- TOAST -->
-
-    <div
-        id="toast"
-        class="toast">
-
-        Producto agregado al carrito
-
-    </div>
-
-    <!-- HEADER -->
-
     <%- include("../partials/header") %>
 
-    <!-- PRODUCT DETAIL -->
+    <!-- MENU -->
 
-    <main class="product-detail">
+    <nav class="menu">
 
-        <!-- GALLERY -->
+        <ul>
 
-        <section class="gallery">
+            <li><a href="/">Inicio</a></li>
 
-            <img
-                id="mainImage"
-                class="main-image"
-                src="<%= producto.imagenes[0] %>"
-                alt="<%= producto.nombre %>">
+            <li><a href="/destacados">Destacados</a></li>
 
-            <div class="thumbnails">
+            <li><a href="/ofertas">Ofertas</a></li>
 
-                <% producto.imagenes.forEach(imagen => { %>
+            <li><a href="/nuevos">Nuevos</a></li>
 
-                    <img
-                        src="<%= imagen %>"
-                        class="thumbnail-image"
-                        onclick="changeImage('<%= imagen %>')">
+        </ul>
 
-                <% }) %>
+    </nav>
 
-            </div>
+    <!-- PRODUCTO -->
 
-        </section>
+    <section class="product-page-wrapper">
 
-        <!-- PRODUCT INFO -->
+        <div class="product-detail-card">
 
-        <section class="product-info">
+            <!-- GALERIA -->
 
-            <span class="product-category">
+            <div class="gallery-wrapper">
 
-                <%= producto.categoria %>
-                •
+                <!-- MINIATURAS -->
 
-                <%= producto.equipo %>
+                <div class="thumbnails-vertical">
 
-            </span>
+                    <% producto.imagenes.forEach(imagen => { %>
 
-            <h1>
-                <%= producto.nombre %>
-            </h1>
+                        <img
 
-            <p class="product-price">
+                            src="<%= imagen %>"
 
-                $<%= producto.precio.toLocaleString("es-AR") %>
+                            class="thumbnail-image"
 
-            </p>
-
-            <p class="product-description">
-
-                Producto oficial importado.
-                Calidad premium.
-                Ideal para colección o uso diario.
-
-            </p>
-
-            <!-- TALLES -->
-
-            <div class="size-section">
-
-                <h3>
-                    Seleccionar talle
-                </h3>
-
-                <div
-                    id="sizesContainer"
-                    class="sizes">
-
-                    <% producto.talles.forEach(talle => { %>
-
-                        <button
-                            class="size-btn">
-
-                            <%= talle %>
-
-                        </button>
+                            onclick="
+                                cambiarImagen(
+                                    '<%= imagen %>'
+                                )
+                            ">
 
                     <% }) %>
 
                 </div>
 
+                <!-- IMAGEN PRINCIPAL -->
+
+                <div class="main-image-container">
+
+                    <img
+
+                        id="mainImage"
+
+                        src="<%= producto.imagenes[0] %>"
+
+                        alt="<%= producto.nombre %>"
+
+                        class="main-image">
+
+                </div>
+
             </div>
 
-            <!-- CANTIDAD -->
+            <!-- INFO -->
 
-            <div class="quantity-section">
+            <div class="product-info">
 
-                <h3>
-                    Cantidad
-                </h3>
+                <!-- BADGES -->
 
-                <input
-                    id="quantityInput"
-                    type="number"
-                    value="1"
-                    min="1">
+                <div class="product-detail-badges">
+
+                    <% if(producto.nuevo){ %>
+
+                        <span class="detail-badge badge-new">
+
+                            NUEVO
+
+                        </span>
+
+                    <% } %>
+
+                    <% if(producto.oferta){ %>
+
+                        <span class="detail-badge badge-sale">
+
+                            OFERTA
+
+                        </span>
+
+                    <% } %>
+
+                    <% if(producto.destacado){ %>
+
+                        <span class="detail-badge badge-featured">
+
+                            DESTACADO
+
+                        </span>
+
+                    <% } %>
+
+                </div>
+
+                <!-- CATEGORIA -->
+
+                <p class="product-category">
+
+                    <%= producto.categoria %>
+
+                </p>
+
+                <!-- TITULO -->
+
+                <h1>
+
+                    <%= producto.nombre %>
+
+                </h1>
+
+                <!-- PRECIO -->
+
+                <p class="product-price">
+
+                    $<%= producto.precio.toLocaleString("es-AR") %>
+
+                </p>
+
+                <!-- DESCRIPCION -->
+
+                <p class="product-description">
+
+                    <%= producto.descripcion || "Sin descripción disponible." %>
+
+                </p>
+
+                <!-- TALLES -->
+
+                <div class="size-section">
+
+                    <h3>
+
+                        Seleccionar talle
+
+                    </h3>
+
+                    <div class="sizes">
+
+                        <% producto.talles.forEach(talle => { %>
+
+                            <button
+                                class="size-btn">
+
+                                <%= talle %>
+
+                            </button>
+
+                        <% }) %>
+
+                    </div>
+
+                </div>
+
+                <!-- CANTIDAD -->
+
+                <div class="quantity-section">
+
+                    <h3>
+
+                        Cantidad
+
+                    </h3>
+
+                    <input
+                        type="number"
+                        id="cantidad"
+                        value="1"
+                        min="1">
+
+                </div>
+
+                <!-- BOTONES -->
+
+                <div class="product-actions">
+
+                    <button
+                        class="buy-btn"
+                        id="addToCartBtn">
+
+                        Agregar al carrito
+
+                    </button>
+
+                    <a
+                        href="/carrito"
+                        class="go-cart-btn">
+
+                        Ir al carrito
+
+                    </a>
+
+                </div>
 
             </div>
 
-            <!-- BOTONES -->
+        </div>
 
-            <button
-                id="addToCartBtn"
-                class="buy-btn">
+    </section>
 
-                Agregar al carrito
+    <!-- DESCRIPCION COMPLETA -->
 
-            </button>
+    <section class="product-extra-description">
 
-            <a
-                href="/carrito"
-                class="go-cart-btn">
+        <h2>
 
-                Ir al carrito
+            Descripción del producto
 
-            </a>
+        </h2>
 
-        </section>
+        <p>
 
-    </main>
+            <%= producto.descripcion || "Sin descripción disponible." %>
+
+        </p>
+
+    </section>
 
     <!-- RELACIONADOS -->
 
     <section class="related-products-section">
 
-        <h2>
-            También te puede interesar
-        </h2>
+        <div class="products-topbar">
+
+            <h2>
+
+                También te puede interesar
+
+            </h2>
+
+        </div>
 
         <div class="products">
 
             <% productos
-                .filter(p =>
-                    p.id !== producto.id &&
-                    (
-                        p.equipo === producto.equipo ||
-                        p.categoria === producto.categoria
-                    )
-                )
+                .filter(p => p.id !== producto.id)
                 .slice(0,4)
                 .forEach(relacionado => { %>
 
                 <article class="product-card">
 
                     <a
-                        href="/producto/<%= relacionado.id %>"
-                        class="product-link">
+                        href="/producto/<%= relacionado.id %>">
 
                         <img
                             src="<%= relacionado.imagenes[0] %>"
@@ -194,7 +289,9 @@
                         <div class="product-info-card">
 
                             <h3>
+
                                 <%= relacionado.nombre %>
+
                             </h3>
 
                             <p class="price">
@@ -202,6 +299,12 @@
                                 $<%= relacionado.precio.toLocaleString("es-AR") %>
 
                             </p>
+
+                            <button class="view-product-btn">
+
+                                Ver producto
+
+                            </button>
 
                         </div>
 
@@ -215,71 +318,19 @@
 
     </section>
 
-    <!-- FOOTER -->
-
     <%- include("../partials/footer") %>
 
     <script>
 
         // =========================
-        // CAMBIO IMAGEN
+        // CAMBIAR IMAGEN
         // =========================
 
-        function changeImage(src){
+        function cambiarImagen(src){
 
             document
                 .getElementById("mainImage")
                 .src = src;
-
-        }
-
-        // =========================
-        // CONTADOR CARRITO
-        // =========================
-
-        function actualizarContador(){
-
-            const cart =
-                JSON.parse(
-                    localStorage.getItem("cart")
-                ) || [];
-
-            const total =
-                cart.reduce(
-                    (acc, item) =>
-                        acc + item.cantidad,
-                    0
-                );
-
-            document
-                .getElementById("cartCount")
-                .textContent = total;
-
-        }
-
-        // =========================
-        // TOAST
-        // =========================
-
-        function mostrarToast(mensaje){
-
-            const toast =
-                document.getElementById("toast");
-
-            toast.textContent =
-                mensaje;
-
-            toast.classList.add(
-                "show-toast"
-            );
-
-            setTimeout(() => {
-
-                toast.classList.remove(
-                    "show-toast"
-                );
-
-            }, 2500);
 
         }
 
@@ -290,26 +341,31 @@
         let talleSeleccionado = null;
 
         const sizeButtons =
-            document.querySelectorAll(".size-btn");
+            document.querySelectorAll(
+                ".size-btn"
+            );
 
-        sizeButtons.forEach(button => {
+        sizeButtons.forEach(btn => {
 
-            button.addEventListener("click", () => {
+            btn.addEventListener(
+                "click",
+                () => {
 
-                sizeButtons.forEach(btn =>
-                    btn.classList.remove(
+                    sizeButtons.forEach(b =>
+                        b.classList.remove(
+                            "active-size"
+                        )
+                    );
+
+                    btn.classList.add(
                         "active-size"
-                    )
-                );
+                    );
 
-                button.classList.add(
-                    "active-size"
-                );
+                    talleSeleccionado =
+                        btn.textContent.trim();
 
-                talleSeleccionado =
-                    button.textContent.trim();
-
-            });
+                }
+            );
 
         });
 
@@ -317,13 +373,18 @@
         // CARRITO
         // =========================
 
-        document
-            .getElementById("addToCartBtn")
-            .addEventListener("click", () => {
+        const addToCartBtn =
+            document.getElementById(
+                "addToCartBtn"
+            );
+
+        addToCartBtn.addEventListener(
+            "click",
+            () => {
 
                 if(!talleSeleccionado){
 
-                    mostrarToast(
+                    alert(
                         "Seleccioná un talle"
                     );
 
@@ -332,59 +393,51 @@
                 }
 
                 const cantidad =
-                    parseInt(
-                        document.getElementById(
-                            "quantityInput"
-                        ).value
+                    Number(
+                        document
+                            .getElementById(
+                                "cantidad"
+                            ).value
                     );
+
+                const productoCarrito = {
+
+                    id:<%= producto.id %>,
+
+                    nombre:`<%= producto.nombre %>`,
+
+                    precio:<%= producto.precio %>,
+
+                    imagen:`<%= producto.imagenes[0] %>`,
+
+                    talle:talleSeleccionado,
+
+                    cantidad
+
+                };
 
                 let cart =
                     JSON.parse(
-                        localStorage.getItem("cart")
+                        localStorage.getItem(
+                            "cart"
+                        )
                     ) || [];
 
-                const existente =
-                    cart.find(item =>
-                        item.id === <%= producto.id %> &&
-                        item.talle === talleSeleccionado
-                    );
-
-                if(existente){
-
-                    existente.cantidad += cantidad;
-
-                }else{
-
-                    cart.push({
-
-                        id:<%= producto.id %>,
-
-                        nombre:"<%= producto.nombre %>",
-
-                        precio:<%= producto.precio %>,
-
-                        talle:talleSeleccionado,
-
-                        cantidad
-
-                    });
-
-                }
+                cart.push(
+                    productoCarrito
+                );
 
                 localStorage.setItem(
                     "cart",
                     JSON.stringify(cart)
                 );
 
-                actualizarContador();
-
-                mostrarToast(
-                    "✓ Producto agregado"
+                alert(
+                    "Producto agregado"
                 );
 
-            });
-
-        actualizarContador();
+            }
+        );
 
     </script>
 

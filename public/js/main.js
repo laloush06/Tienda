@@ -11,7 +11,7 @@ function actualizarContador(){
 
     const total =
         cart.reduce(
-            (acc, item) =>
+            (acc,item)=>
                 acc + item.cantidad,
             0
         );
@@ -33,12 +33,67 @@ function actualizarContador(){
 actualizarContador();
 
 // =========================
-// FILTROS
+// DOM
 // =========================
 
 document.addEventListener(
     "DOMContentLoaded",
     () => {
+
+        // =========================
+        // ACORDEONES
+        // =========================
+
+        const toggles =
+            document.querySelectorAll(
+                ".filter-toggle"
+            );
+
+        toggles.forEach(toggle => {
+
+            toggle.addEventListener(
+                "click",
+                () => {
+
+                    const content =
+                        toggle.nextElementSibling;
+
+                    content.classList.toggle(
+                        "active-filter"
+                    );
+
+                    const icon =
+                        toggle.querySelector(
+                            ".toggle-icon"
+                        );
+
+                    if(
+                        content.classList.contains(
+                            "active-filter"
+                        )
+                    ){
+
+                        icon.textContent = "−";
+
+                    }else{
+
+                        icon.textContent = "+";
+
+                    }
+
+                }
+            );
+
+        });
+
+        // =========================
+        // ELEMENTOS
+        // =========================
+
+        const productsGrid =
+            document.getElementById(
+                "productsGrid"
+            );
 
         const productCards =
             document.querySelectorAll(
@@ -70,19 +125,26 @@ document.addEventListener(
                 "clearFiltersBtn"
             );
 
+        const noResults =
+            document.getElementById(
+                "noResults"
+            );
+
+        const sortSelect =
+            document.getElementById(
+                "sortSelect"
+            );
+
         // =========================
-        // OBTENER VALORES
+        // HELPERS
         // =========================
 
         function getSelectedValues(elements){
 
             return Array.from(elements)
-                .filter(
-                    el => el.checked
-                )
-                .map(
-                    el =>
-                        el.value.toLowerCase()
+                .filter(el => el.checked)
+                .map(el =>
+                    el.value.toLowerCase()
                 );
 
         }
@@ -115,6 +177,8 @@ document.addEventListener(
                     teamFilters
                 );
 
+            let visibles = 0;
+
             productCards.forEach(card => {
 
                 const nombre =
@@ -136,9 +200,7 @@ document.addEventListener(
 
                 let visible = true;
 
-                // =========================
                 // BUSCADOR
-                // =========================
 
                 if(
                     searchText &&
@@ -151,13 +213,9 @@ document.addEventListener(
 
                 }
 
-                // =========================
                 // CATEGORIA
-                // =========================
 
-                if(
-                    selectedTypes.length > 0
-                ){
+                if(selectedTypes.length > 0){
 
                     const matchType =
                         selectedTypes.some(
@@ -175,13 +233,9 @@ document.addEventListener(
 
                 }
 
-                // =========================
                 // EQUIPO
-                // =========================
 
-                if(
-                    selectedTeams.length > 0
-                ){
+                if(selectedTeams.length > 0){
 
                     const matchTeam =
                         selectedTeams.some(
@@ -199,13 +253,9 @@ document.addEventListener(
 
                 }
 
-                // =========================
                 // TALLES
-                // =========================
 
-                if(
-                    selectedSizes.length > 0
-                ){
+                if(selectedSizes.length > 0){
 
                     const matchSize =
                         selectedSizes.some(
@@ -223,14 +273,14 @@ document.addEventListener(
 
                 }
 
-                // =========================
-                // MOSTRAR / OCULTAR
-                // =========================
+                // MOSTRAR
 
                 if(visible){
 
                     card.style.display =
                         "block";
+
+                    visibles++;
 
                 }else{
 
@@ -238,6 +288,88 @@ document.addEventListener(
                         "none";
 
                 }
+
+            });
+
+            // NO RESULTS
+
+            if(visibles === 0){
+
+                noResults.style.display =
+                    "block";
+
+            }else{
+
+                noResults.style.display =
+                    "none";
+
+            }
+
+        }
+
+        // =========================
+        // ORDENAR
+        // =========================
+
+        function ordenarProductos(){
+
+            if(!sortSelect) return;
+
+            const cards =
+                Array.from(
+                    document.querySelectorAll(
+                        ".product-card"
+                    )
+                );
+
+            const value =
+                sortSelect.value;
+
+            cards.sort((a,b)=>{
+
+                if(value === "low"){
+
+                    return (
+                        Number(a.dataset.price)
+                        -
+                        Number(b.dataset.price)
+                    );
+
+                }
+
+                if(value === "high"){
+
+                    return (
+                        Number(b.dataset.price)
+                        -
+                        Number(a.dataset.price)
+                    );
+
+                }
+
+                if(value === "featured"){
+
+                    return (
+                        b.dataset.featured === "true"
+                    ) - (
+                        a.dataset.featured === "true"
+                    );
+
+                }
+
+                return (
+                    Number(b.dataset.id)
+                    -
+                    Number(a.dataset.id)
+                );
+
+            });
+
+            cards.forEach(card => {
+
+                productsGrid.appendChild(
+                    card
+                );
 
             });
 
@@ -268,6 +400,15 @@ document.addEventListener(
             );
 
         });
+
+        if(sortSelect){
+
+            sortSelect.addEventListener(
+                "change",
+                ordenarProductos
+            );
+
+        }
 
         // =========================
         // LIMPIAR
@@ -304,6 +445,8 @@ document.addEventListener(
                 );
 
         }
+
+        ordenarProductos();
 
     }
 );

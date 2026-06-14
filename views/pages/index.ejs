@@ -10,7 +10,7 @@
         content="width=device-width, initial-scale=1.0">
 
     <title>
-        FUTBOL STORE
+        Camisetas del Mundo
     </title>
 
     <link
@@ -24,37 +24,23 @@
     <%- include("../partials/header") %>
 
     <!-- MENU -->
-<nav class="menu">
 
-    <ul>
+    <nav class="menu">
 
-        <li>
-            <a href="/">
-                Inicio
-            </a>
-        </li>
+        <ul>
 
-        <li>
-            <a href="/destacados">
-                Destacados
-            </a>
-        </li>
+            <li><a href="/">Inicio</a></li>
 
-        <li>
-            <a href="/ofertas">
-                Ofertas
-            </a>
-        </li>
+            <li><a href="/destacados">Destacados</a></li>
 
-        <li>
-            <a href="/nuevos">
-                Nuevos
-            </a>
-        </li>
+            <li><a href="/ofertas">Ofertas</a></li>
 
-    </ul>
+            <li><a href="/nuevos">Nuevos</a></li>
 
-</nav>
+        </ul>
+
+    </nav>
+
     <!-- CONTENIDO -->
 
     <main class="container">
@@ -73,7 +59,7 @@
                     id="clearFiltersBtn"
                     class="clear-filters-btn">
 
-                    Limpiar filtros
+                    Limpiar
 
                 </button>
 
@@ -83,61 +69,25 @@
 
             <div class="filter-group">
 
-                <h4>Talles</h4>
+                <button
+                    class="filter-toggle">
 
-                <label>
-                    <input
-                        type="checkbox"
-                        class="filter-size"
-                        value="XS">
+                    Talles
 
-                    XS
-                </label>
+                    <span>+</span>
 
-                <label>
-                    <input
-                        type="checkbox"
-                        class="filter-size"
-                        value="S">
+                </button>
 
-                    S
-                </label>
+                <div class="filter-content">
 
-                <label>
-                    <input
-                        type="checkbox"
-                        class="filter-size"
-                        value="M">
+                    <label><input type="checkbox" class="filter-size" value="XS"> XS</label>
+                    <label><input type="checkbox" class="filter-size" value="S"> S</label>
+                    <label><input type="checkbox" class="filter-size" value="M"> M</label>
+                    <label><input type="checkbox" class="filter-size" value="L"> L</label>
+                    <label><input type="checkbox" class="filter-size" value="XL"> XL</label>
+                    <label><input type="checkbox" class="filter-size" value="XXL"> XXL</label>
 
-                    M
-                </label>
-
-                <label>
-                    <input
-                        type="checkbox"
-                        class="filter-size"
-                        value="L">
-
-                    L
-                </label>
-
-                <label>
-                    <input
-                        type="checkbox"
-                        class="filter-size"
-                        value="XL">
-
-                    XL
-                </label>
-
-                <label>
-                    <input
-                        type="checkbox"
-                        class="filter-size"
-                        value="XXL">
-
-                    XXL
-                </label>
+                </div>
 
             </div>
 
@@ -145,63 +95,25 @@
 
             <div class="filter-group">
 
-                <h4>
+                <button
+                    class="filter-toggle">
+
                     Indumentaria
-                </h4>
 
-                <label>
-                    <input
-                        type="checkbox"
-                        class="filter-type"
-                        value="Camiseta">
+                    <span>+</span>
 
-                    Camiseta
-                </label>
+                </button>
 
-                <label>
-                    <input
-                        type="checkbox"
-                        class="filter-type"
-                        value="Short">
+                <div class="filter-content">
 
-                    Short
-                </label>
+                    <label><input type="checkbox" class="filter-type" value="Camiseta"> Camiseta</label>
+                    <label><input type="checkbox" class="filter-type" value="Short"> Short</label>
+                    <label><input type="checkbox" class="filter-type" value="Pantalon"> Pantalon</label>
+                    <label><input type="checkbox" class="filter-type" value="Campera"> Campera</label>
+                    <label><input type="checkbox" class="filter-type" value="Buzo"> Buzo</label>
+                    <label><input type="checkbox" class="filter-type" value="Conjunto"> Conjunto</label>
 
-                <label>
-                    <input
-                        type="checkbox"
-                        class="filter-type"
-                        value="Pantalon">
-
-                    Pantalon
-                </label>
-
-                <label>
-                    <input
-                        type="checkbox"
-                        class="filter-type"
-                        value="Campera">
-
-                    Campera
-                </label>
-
-                <label>
-                    <input
-                        type="checkbox"
-                        class="filter-type"
-                        value="Buzo">
-
-                    Buzo
-                </label>
-
-                <label>
-                    <input
-                        type="checkbox"
-                        class="filter-type"
-                        value="Conjunto">
-
-                    Conjunto
-                </label>
+                </div>
 
             </div>
 
@@ -209,45 +121,23 @@
 
             <div class="filter-group">
 
-                <h4>
+                <button
+                    class="filter-toggle">
+
                     Clubes
-                </h4>
 
-                <label>
-                    <input
-                        type="checkbox"
-                        class="filter-team"
-                        value="Boca">
+                    <span>+</span>
 
-                    Boca
-                </label>
+                </button>
 
-                <label>
-                    <input
-                        type="checkbox"
-                        class="filter-team"
-                        value="River">
+                <div class="filter-content">
 
-                    River
-                </label>
+                    <label><input type="checkbox" class="filter-team" value="Boca"> Boca</label>
+                    <label><input type="checkbox" class="filter-team" value="River"> River</label>
+                    <label><input type="checkbox" class="filter-team" value="Barcelona"> Barcelona</label>
+                    <label><input type="checkbox" class="filter-team" value="Real Madrid"> Real Madrid</label>
 
-                <label>
-                    <input
-                        type="checkbox"
-                        class="filter-team"
-                        value="Barcelona">
-
-                    Barcelona
-                </label>
-
-                <label>
-                    <input
-                        type="checkbox"
-                        class="filter-team"
-                        value="Real Madrid">
-
-                    Real Madrid
-                </label>
+                </div>
 
             </div>
 
@@ -255,36 +145,22 @@
 
             <div class="filter-group">
 
-                <h4>
+                <button
+                    class="filter-toggle">
+
                     Selecciones
-                </h4>
 
-                <label>
-                    <input
-                        type="checkbox"
-                        class="filter-team"
-                        value="Argentina">
+                    <span>+</span>
 
-                    Argentina
-                </label>
+                </button>
 
-                <label>
-                    <input
-                        type="checkbox"
-                        class="filter-team"
-                        value="Brasil">
+                <div class="filter-content">
 
-                    Brasil
-                </label>
+                    <label><input type="checkbox" class="filter-team" value="Argentina"> Argentina</label>
+                    <label><input type="checkbox" class="filter-team" value="Brasil"> Brasil</label>
+                    <label><input type="checkbox" class="filter-team" value="Francia"> Francia</label>
 
-                <label>
-                    <input
-                        type="checkbox"
-                        class="filter-team"
-                        value="Francia">
-
-                    Francia
-                </label>
+                </div>
 
             </div>
 
@@ -292,86 +168,130 @@
 
         <!-- PRODUCTOS -->
 
-        <section class="products">
+        <section class="products-section">
 
-            <% productos.forEach(producto => { %>
+            <div class="products-topbar">
 
-                <article
-                    class="product-card"
+                <h2>
+                    Productos
+                </h2>
 
-                    data-equipo="<%= producto.equipo %>"
+                <select id="sortSelect">
 
-                    data-categoria="<%= producto.categoria %>"
+                    <option value="recent">
+                        Más recientes
+                    </option>
 
-                    data-talles="<%= producto.talles.join(' ') %>">
+                    <option value="low">
+                        Menor precio
+                    </option>
 
-                    <!-- BADGES -->
+                    <option value="high">
+                        Mayor precio
+                    </option>
 
-                    <% if(producto.nuevo){ %>
+                    <option value="featured">
+                        Destacados
+                    </option>
 
-                        <span class="product-badge badge-new">
+                </select>
 
-                            NUEVO
+            </div>
 
-                        </span>
+            <div
+                id="noResults"
+                class="no-results">
 
-                    <% } %>
+                No se encontraron productos.
 
-                    <% if(producto.oferta){ %>
+            </div>
 
-                        <span class="product-badge badge-sale">
+            <div
+                class="products"
+                id="productsGrid">
 
-                            OFERTA
+                <% productos.forEach(producto => { %>
 
-                        </span>
+                    <article
+                        class="product-card"
 
-                    <% } %>
+                        data-id="<%= producto.id %>"
 
-                    <% if(producto.destacado){ %>
+                        data-price="<%= producto.precio %>"
 
-                        <span class="product-badge badge-featured">
+                        data-featured="<%= producto.destacado %>"
 
-                            DESTACADO
+                        data-equipo="<%= producto.equipo %>"
 
-                        </span>
+                        data-categoria="<%= producto.categoria %>"
 
-                    <% } %>
+                        data-talles="<%= producto.talles.join(' ') %>">
 
-                    <!-- PRODUCTO -->
+                        <% if(producto.nuevo){ %>
 
-                    <a
-                        href="/producto/<%= producto.id %>"
-                        class="product-link">
+                            <span class="product-badge badge-new">
 
-                        <img
-                            src="<%= producto.imagenes[0] %>"
-                            alt="<%= producto.nombre %>">
+                                NUEVO
 
-                        <div class="product-info-card">
+                            </span>
 
-                            <h3>
-                                <%= producto.nombre %>
-                            </h3>
+                        <% } %>
 
-                            <p class="price">
+                        <% if(producto.oferta){ %>
 
-                                $<%= producto.precio.toLocaleString("es-AR") %>
+                            <span class="product-badge badge-sale">
 
-                            </p>
+                                OFERTA
 
-                            <button class="view-product-btn">
+                            </span>
 
-                                Ver producto
+                        <% } %>
 
-                            </button>
+                        <% if(producto.destacado){ %>
 
-                        </div>
+                            <span class="product-badge badge-featured">
 
-                    </a>
+                                DESTACADO
 
-                </article>
+                            </span>
 
-            <% }) %>
+                        <% } %>
+
+                        <a
+                            href="/producto/<%= producto.id %>"
+                            class="product-link">
+
+                            <img
+                                src="<%= producto.imagenes[0] %>"
+                                alt="<%= producto.nombre %>">
+
+                            <div class="product-info-card">
+
+                                <h3>
+                                    <%= producto.nombre %>
+                                </h3>
+
+                                <p class="price">
+
+                                    $<%= producto.precio.toLocaleString("es-AR") %>
+
+                                </p>
+
+                                <button class="view-product-btn">
+
+                                    Ver producto
+
+                                </button>
+
+                            </div>
+
+                        </a>
+
+                    </article>
+
+                <% }) %>
+
+            </div>
 
         </section>
 

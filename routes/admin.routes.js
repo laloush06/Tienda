@@ -8,51 +8,41 @@ const path = require("path");
 
 const multer = require("multer");
 
-// =========================
-// MULTER
-// =========================
+/* =========================
+   MULTER
+========================= */
 
-const storage =
-    multer.diskStorage({
+const storage = multer.diskStorage({
 
-        destination:(req,file,cb) => {
+    destination:(req,file,cb)=>{
 
-            cb(
-                null,
-                path.join(
-                    __dirname,
-                    "..",
-                    "public",
-                    "uploads"
-                )
-            );
+        cb(
+            null,
+            "public/img"
+        );
 
-        },
+    },
 
-        filename:(req,file,cb) => {
+    filename:(req,file,cb)=>{
 
-            const uniqueName =
-                Date.now() +
-                "-" +
-                file.originalname;
+        cb(
+            null,
+            Date.now() +
+            "-" +
+            file.originalname
+        );
 
-            cb(
-                null,
-                uniqueName
-            );
+    }
 
-        }
+});
 
-    });
+const upload = multer({
+    storage
+});
 
-const upload =
-    multer({
-        storage
-    });
-
-// =========================
-// DATA
-// =========================
+/* =========================
+   JSON PATH
+========================= */
 
 const productosPath =
     path.join(
@@ -62,11 +52,11 @@ const productosPath =
         "productos.json"
     );
 
-// =========================
-// HELPERS
-// =========================
+/* =========================
+   HELPERS
+========================= */
 
-function leerProductos(){
+function obtenerProductos(){
 
     return JSON.parse(
         fs.readFileSync(
@@ -84,66 +74,56 @@ function guardarProductos(productos){
         JSON.stringify(
             productos,
             null,
-            4
+            2
         )
     );
 
 }
 
-// =========================
-// ADMIN
-// =========================
+/* =========================
+   ADMIN HOME
+========================= */
 
-router.get("/", (req, res) => {
+router.get("/", (req,res)=>{
 
     const productos =
-        leerProductos();
+        obtenerProductos();
 
     res.render(
         "pages/admin",
         {
-            productos
+            productos,
+            productoEditar:null
         }
     );
 
 });
 
-// =========================
-// AGREGAR
-// =========================
+/* =========================
+   CREAR
+========================= */
 
 router.post(
-    "/agregar",
-    upload.array(
-        "imagenes",
-        10
-    ),
-    (req, res) => {
+    "/crear",
+    upload.array("imagenes",10),
+    (req,res)=>{
 
         const productos =
-            leerProductos();
-
-        const talles =
-            Array.isArray(
-                req.body.talles
-            )
-            ? req.body.talles
-            : [req.body.talles];
+            obtenerProductos();
 
         const imagenes =
             req.files.map(file =>
-                "/uploads/" +
-                file.filename
+                "/img/" + file.filename
             );
 
         const nuevoProducto = {
 
             id:
                 productos.length > 0
-                ? productos[
-                    productos.length - 1
-                  ].id + 1
-                : 1,
+                    ? productos[
+                        productos.length - 1
+                    ].id + 1
+                    : 1,
 
             nombre:req.body.nombre,
 
@@ -153,22 +133,27 @@ router.post(
 
             equipo:req.body.equipo,
 
-            tipo:req.body.tipo,
-
             categoria:req.body.categoria,
 
-            talles,
+            descripcion:req.body.descripcion,
+
+            talles:
+                Array.isArray(
+                    req.body.talles
+                )
+                ? req.body.talles
+                : [req.body.talles],
 
             imagenes,
 
             nuevo:
-                !!req.body.nuevo,
+                req.body.nuevo === "on",
 
             oferta:
-                !!req.body.oferta,
+                req.body.oferta === "on",
 
             destacado:
-                !!req.body.destacado
+                req.body.destacado === "on"
 
         };
 
@@ -180,23 +165,159 @@ router.post(
             productos
         );
 
-        res.redirect("/admin");
+        res.redirect(
+            "/admin"
+        );
 
     }
 );
 
-// =========================
-// ELIMINAR
-// =========================
+/* =========================
+   EDITAR PAGE
+========================= */
+
+router.get(
+    "/editar/:id",
+    (req,res)=>{
+
+        const productos =
+            obtenerProductos();
+
+        const productoEditar =
+            productos.find(
+                p =>
+                    p.id ==
+                    req.params.id
+            );
+
+        if(!productoEditar){
+
+            return res.redirect(
+                "/admin"
+            );
+
+        }
+
+        res.render(
+            "pages/admin",
+            {
+                productos,
+                productoEditar
+            }
+        );
+
+    }
+);
+
+/* =========================
+   GUARDAR EDICION
+========================= */
+
+router.post(
+    "/editar/:id",
+    upload.array("imagenes",10),
+    (req,res)=>{
+
+        const productos =
+            obtenerProductos();
+
+        const producto =
+            productos.find(
+                p =>
+                    p.id ==
+                    req.params.id
+            );
+
+        if(!producto){
+
+            return res.redirect(
+                "/admin"
+            );
+
+        }
+
+        // =========================
+        // ACTUALIZAR CAMPOS
+        // =========================
+
+        producto.nombre =
+            req.body.nombre;
+
+        producto.precio =
+            Number(
+                req.body.precio
+            );
+
+        producto.equipo =
+            req.body.equipo;
+
+        producto.categoria =
+            req.body.categoria;
+
+        producto.descripcion =
+            req.body.descripcion;
+
+        producto.talles =
+            Array.isArray(
+                req.body.talles
+            )
+            ? req.body.talles
+            : [req.body.talles];
+
+        producto.nuevo =
+            req.body.nuevo === "on";
+
+        producto.oferta =
+            req.body.oferta === "on";
+
+        producto.destacado =
+            req.body.destacado === "on";
+
+        // =========================
+        // NUEVAS IMAGENES
+        // =========================
+
+        if(
+            req.files &&
+            req.files.length > 0
+        ){
+
+            producto.imagenes =
+                req.files.map(
+                    file =>
+                        "/img/" +
+                        file.filename
+                );
+
+        }
+
+        // =========================
+        // GUARDAR JSON
+        // =========================
+
+        guardarProductos(
+            productos
+        );
+
+        res.redirect(
+            "/admin"
+        );
+
+    }
+);
+
+/* =========================
+   ELIMINAR
+========================= */
 
 router.post(
     "/eliminar/:id",
-    (req, res) => {
+    (req,res)=>{
 
-        const productos =
-            leerProductos();
+        let productos =
+            obtenerProductos();
 
-        const nuevosProductos =
+        productos =
             productos.filter(
                 p =>
                     p.id !=
@@ -204,10 +325,12 @@ router.post(
             );
 
         guardarProductos(
-            nuevosProductos
+            productos
         );
 
-        res.redirect("/admin");
+        res.redirect(
+            "/admin"
+        );
 
     }
 );
