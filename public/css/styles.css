@@ -1182,3 +1182,93 @@ a{
     border:1px solid #ddd;
 
 }
+
+/* =========================
+   BADGES
+========================= */
+
+.product-card{
+
+    position:relative;
+
+}
+
+.product-badge{
+
+    position:absolute;
+
+    top:15px;
+
+    left:15px;
+
+    z-index:20;
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    color:white;
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
+
+.badge-new{
+
+    background:#111;
+
+}
+
+.badge-sale{
+
+    background:#ff3b30;
+
+    top:55px;
+
+}
+
+.badge-featured{
+
+    background:#ff9500;
+
+    top:95px;
+
+}
+
+/* =========================
+   ADMIN BADGES
+========================= */
+
+.admin-badges{
+
+    grid-column:span 2;
+
+    display:flex;
+
+    gap:20px;
+
+    flex-wrap:wrap;
+
+}
+
+.admin-badges label{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    background:#f3f3f3;
+
+    padding:12px 18px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+}

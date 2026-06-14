@@ -24,22 +24,37 @@
     <%- include("../partials/header") %>
 
     <!-- MENU -->
+<nav class="menu">
 
-    <nav class="menu">
+    <ul>
 
-        <ul>
+        <li>
+            <a href="/">
+                Inicio
+            </a>
+        </li>
 
-            <li><a href="/">Inicio</a></li>
-            <li><a href="#">Selecciones</a></li>
-            <li><a href="#">Clubes</a></li>
-            <li><a href="#">Retro</a></li>
-            <li><a href="#">Entrenamiento</a></li>
-            <li><a href="#">Ofertas</a></li>
+        <li>
+            <a href="/destacados">
+                Destacados
+            </a>
+        </li>
 
-        </ul>
+        <li>
+            <a href="/ofertas">
+                Ofertas
+            </a>
+        </li>
 
-    </nav>
+        <li>
+            <a href="/nuevos">
+                Nuevos
+            </a>
+        </li>
 
+    </ul>
+
+</nav>
     <!-- CONTENIDO -->
 
     <main class="container">
@@ -70,17 +85,59 @@
 
                 <h4>Talles</h4>
 
-                <label><input type="checkbox" class="filter-size" value="XS"> XS</label>
+                <label>
+                    <input
+                        type="checkbox"
+                        class="filter-size"
+                        value="XS">
 
-                <label><input type="checkbox" class="filter-size" value="S"> S</label>
+                    XS
+                </label>
 
-                <label><input type="checkbox" class="filter-size" value="M"> M</label>
+                <label>
+                    <input
+                        type="checkbox"
+                        class="filter-size"
+                        value="S">
 
-                <label><input type="checkbox" class="filter-size" value="L"> L</label>
+                    S
+                </label>
 
-                <label><input type="checkbox" class="filter-size" value="XL"> XL</label>
+                <label>
+                    <input
+                        type="checkbox"
+                        class="filter-size"
+                        value="M">
 
-                <label><input type="checkbox" class="filter-size" value="XXL"> XXL</label>
+                    M
+                </label>
+
+                <label>
+                    <input
+                        type="checkbox"
+                        class="filter-size"
+                        value="L">
+
+                    L
+                </label>
+
+                <label>
+                    <input
+                        type="checkbox"
+                        class="filter-size"
+                        value="XL">
+
+                    XL
+                </label>
+
+                <label>
+                    <input
+                        type="checkbox"
+                        class="filter-size"
+                        value="XXL">
+
+                    XXL
+                </label>
 
             </div>
 
@@ -88,19 +145,63 @@
 
             <div class="filter-group">
 
-                <h4>Indumentaria</h4>
+                <h4>
+                    Indumentaria
+                </h4>
 
-                <label><input type="checkbox" class="filter-type" value="Camiseta"> Camiseta</label>
+                <label>
+                    <input
+                        type="checkbox"
+                        class="filter-type"
+                        value="Camiseta">
 
-                <label><input type="checkbox" class="filter-type" value="Short"> Short</label>
+                    Camiseta
+                </label>
 
-                <label><input type="checkbox" class="filter-type" value="Pantalon"> Pantalon</label>
+                <label>
+                    <input
+                        type="checkbox"
+                        class="filter-type"
+                        value="Short">
 
-                <label><input type="checkbox" class="filter-type" value="Campera"> Campera</label>
+                    Short
+                </label>
 
-                <label><input type="checkbox" class="filter-type" value="Buzo"> Buzo</label>
+                <label>
+                    <input
+                        type="checkbox"
+                        class="filter-type"
+                        value="Pantalon">
 
-                <label><input type="checkbox" class="filter-type" value="Conjunto"> Conjunto</label>
+                    Pantalon
+                </label>
+
+                <label>
+                    <input
+                        type="checkbox"
+                        class="filter-type"
+                        value="Campera">
+
+                    Campera
+                </label>
+
+                <label>
+                    <input
+                        type="checkbox"
+                        class="filter-type"
+                        value="Buzo">
+
+                    Buzo
+                </label>
+
+                <label>
+                    <input
+                        type="checkbox"
+                        class="filter-type"
+                        value="Conjunto">
+
+                    Conjunto
+                </label>
 
             </div>
 
@@ -108,15 +209,45 @@
 
             <div class="filter-group">
 
-                <h4>Clubes</h4>
+                <h4>
+                    Clubes
+                </h4>
 
-                <label><input type="checkbox" class="filter-team" value="Boca"> Boca</label>
+                <label>
+                    <input
+                        type="checkbox"
+                        class="filter-team"
+                        value="Boca">
 
-                <label><input type="checkbox" class="filter-team" value="River"> River</label>
+                    Boca
+                </label>
 
-                <label><input type="checkbox" class="filter-team" value="Barcelona"> Barcelona</label>
+                <label>
+                    <input
+                        type="checkbox"
+                        class="filter-team"
+                        value="River">
 
-                <label><input type="checkbox" class="filter-team" value="Real Madrid"> Real Madrid</label>
+                    River
+                </label>
+
+                <label>
+                    <input
+                        type="checkbox"
+                        class="filter-team"
+                        value="Barcelona">
+
+                    Barcelona
+                </label>
+
+                <label>
+                    <input
+                        type="checkbox"
+                        class="filter-team"
+                        value="Real Madrid">
+
+                    Real Madrid
+                </label>
 
             </div>
 
@@ -124,13 +255,36 @@
 
             <div class="filter-group">
 
-                <h4>Selecciones</h4>
+                <h4>
+                    Selecciones
+                </h4>
 
-                <label><input type="checkbox" class="filter-team" value="Argentina"> Argentina</label>
+                <label>
+                    <input
+                        type="checkbox"
+                        class="filter-team"
+                        value="Argentina">
 
-                <label><input type="checkbox" class="filter-team" value="Brasil"> Brasil</label>
+                    Argentina
+                </label>
 
-                <label><input type="checkbox" class="filter-team" value="Francia"> Francia</label>
+                <label>
+                    <input
+                        type="checkbox"
+                        class="filter-team"
+                        value="Brasil">
+
+                    Brasil
+                </label>
+
+                <label>
+                    <input
+                        type="checkbox"
+                        class="filter-team"
+                        value="Francia">
+
+                    Francia
+                </label>
 
             </div>
 
@@ -150,6 +304,40 @@
                     data-categoria="<%= producto.categoria %>"
 
                     data-talles="<%= producto.talles.join(' ') %>">
+
+                    <!-- BADGES -->
+
+                    <% if(producto.nuevo){ %>
+
+                        <span class="product-badge badge-new">
+
+                            NUEVO
+
+                        </span>
+
+                    <% } %>
+
+                    <% if(producto.oferta){ %>
+
+                        <span class="product-badge badge-sale">
+
+                            OFERTA
+
+                        </span>
+
+                    <% } %>
+
+                    <% if(producto.destacado){ %>
+
+                        <span class="product-badge badge-featured">
+
+                            DESTACADO
+
+                        </span>
+
+                    <% } %>
+
+                    <!-- PRODUCTO -->
 
                     <a
                         href="/producto/<%= producto.id %>"

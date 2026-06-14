@@ -159,130 +159,22 @@ router.post(
 
             talles,
 
-            imagenes
+            imagenes,
+
+            nuevo:
+                !!req.body.nuevo,
+
+            oferta:
+                !!req.body.oferta,
+
+            destacado:
+                !!req.body.destacado
 
         };
 
         productos.push(
             nuevoProducto
         );
-
-        guardarProductos(
-            productos
-        );
-
-        res.redirect("/admin");
-
-    }
-);
-
-// =========================
-// EDITAR PAGE
-// =========================
-
-router.get(
-    "/editar/:id",
-    (req, res) => {
-
-        const productos =
-            leerProductos();
-
-        const producto =
-            productos.find(
-                p =>
-                    p.id ==
-                    req.params.id
-            );
-
-        if(!producto){
-
-            return res.send(
-                "Producto no encontrado"
-            );
-
-        }
-
-        res.render(
-            "pages/editar-producto",
-            {
-                producto
-            }
-        );
-
-    }
-);
-
-// =========================
-// GUARDAR EDICION
-// =========================
-
-router.post(
-    "/editar/:id",
-    upload.array(
-        "imagenes",
-        10
-    ),
-    (req, res) => {
-
-        const productos =
-            leerProductos();
-
-        const index =
-            productos.findIndex(
-                p =>
-                    p.id ==
-                    req.params.id
-            );
-
-        if(index === -1){
-
-            return res.send(
-                "Producto no encontrado"
-            );
-
-        }
-
-        const talles =
-            Array.isArray(
-                req.body.talles
-            )
-            ? req.body.talles
-            : [req.body.talles];
-
-        let imagenes =
-            productos[index].imagenes;
-
-        if(req.files.length > 0){
-
-            imagenes =
-                req.files.map(file =>
-                    "/uploads/" +
-                    file.filename
-                );
-
-        }
-
-        productos[index] = {
-
-            ...productos[index],
-
-            nombre:req.body.nombre,
-
-            precio:Number(
-                req.body.precio
-            ),
-
-            equipo:req.body.equipo,
-
-            tipo:req.body.tipo,
-
-            categoria:req.body.categoria,
-
-            talles,
-
-            imagenes
-
-        };
 
         guardarProductos(
             productos

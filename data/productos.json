@@ -144,5 +144,38 @@
             "/uploads/1781466448837-20358269-1200-auto.webp",
             "/uploads/1781466448839-20358270-1200-auto.webp"
         ]
+    },
+    {
+        "id": 9,
+        "nombre": "Camiseta Riber",
+        "precio": 10000,
+        "equipo": "River",
+        "tipo": "Club",
+        "categoria": "Camiseta",
+        "talles": [
+            "XXL"
+        ],
+        "imagenes": [
+            "/uploads/1781466876925-20613805-1200-auto.webp",
+            "/uploads/1781466876926-20613806-1200-auto.webp",
+            "/uploads/1781466876926-20613807-1200-auto.webp"
+        ]
+    },
+    {
+        "id": 10,
+        "nombre": "1",
+        "precio": 1,
+        "equipo": "Argentina",
+        "tipo": "Seleccion",
+        "categoria": "Short",
+        "talles": [
+            "M"
+        ],
+        "imagenes": [
+            "/uploads/1781467117101-pixelcut-export.jpeg"
+        ],
+        "nuevo": true,
+        "oferta": false,
+        "destacado": false
     }
 ]

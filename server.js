@@ -81,7 +81,7 @@ function obtenerProductos(){
 }
 
 /* =========================
-   AUTH MIDDLEWARE
+   AUTH
 ========================= */
 
 function verificarAdmin(
@@ -131,8 +131,6 @@ app.post("/login", (req, res) => {
         password
     } = req.body;
 
-    // LOGIN SIMPLE
-
     if(
         usuario === "admin" &&
         password === "1234"
@@ -177,6 +175,69 @@ app.get("/", (req, res) => {
 
     const productos =
         obtenerProductos();
+
+    res.render(
+        "pages/index",
+        {
+            productos
+        }
+    );
+
+});
+
+/* =========================
+   DESTACADOS
+========================= */
+
+app.get("/destacados", (req, res) => {
+
+    const productos =
+        obtenerProductos()
+            .filter(
+                p => p.destacado
+            );
+
+    res.render(
+        "pages/index",
+        {
+            productos
+        }
+    );
+
+});
+
+/* =========================
+   OFERTAS
+========================= */
+
+app.get("/ofertas", (req, res) => {
+
+    const productos =
+        obtenerProductos()
+            .filter(
+                p => p.oferta
+            );
+
+    res.render(
+        "pages/index",
+        {
+            productos
+        }
+    );
+
+});
+
+/* =========================
+   NUEVOS
+========================= */
+
+app.get("/nuevos", (req, res) => {
+
+    const productos =
+        obtenerProductos()
+            .filter(
+                p => p.nuevo
+            );
 
     res.render(
         "pages/index",

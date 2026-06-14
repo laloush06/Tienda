@@ -149,6 +149,42 @@
 
             </select>
 
+            <!-- BADGES -->
+
+            <div class="admin-badges">
+
+                <label>
+
+                    <input
+                        type="checkbox"
+                        name="nuevo">
+
+                    Nuevo
+
+                </label>
+
+                <label>
+
+                    <input
+                        type="checkbox"
+                        name="oferta">
+
+                    Oferta
+
+                </label>
+
+                <label>
+
+                    <input
+                        type="checkbox"
+                        name="destacado">
+
+                    Destacado
+
+                </label>
+
+            </div>
+
             <!-- UPLOAD -->
 
             <div class="admin-upload-container">
@@ -167,8 +203,6 @@
                     accept="image/*"
                     multiple
                     hidden>
-
-                <!-- INPUT REAL -->
 
                 <input
                     type="file"
@@ -196,15 +230,10 @@
                 <div class="admin-talles-grid">
 
                     <label><input type="checkbox" name="talles" value="XS"> XS</label>
-
                     <label><input type="checkbox" name="talles" value="S"> S</label>
-
                     <label><input type="checkbox" name="talles" value="M"> M</label>
-
                     <label><input type="checkbox" name="talles" value="L"> L</label>
-
                     <label><input type="checkbox" name="talles" value="XL"> XL</label>
-
                     <label><input type="checkbox" name="talles" value="XXL"> XXL</label>
 
                 </div>
@@ -251,18 +280,8 @@
                             </p>
 
                             <p>
-                                Tipo:
-                                <%= producto.tipo %>
-                            </p>
-
-                            <p>
                                 Categoría:
                                 <%= producto.categoria %>
-                            </p>
-
-                            <p>
-                                Imágenes:
-                                <%= producto.imagenes.length %>
                             </p>
 
                         </div>
@@ -301,8 +320,6 @@
         </div>
 
     </main>
-
-    <!-- MULTIPLE IMAGES REAL -->
 
     <script>
 
