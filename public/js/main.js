@@ -71,19 +71,24 @@ document.addEventListener(
             );
 
         // =========================
-        // OBTENER FILTROS
+        // OBTENER VALORES
         // =========================
 
         function getSelectedValues(elements){
 
             return Array.from(elements)
-                .filter(el => el.checked)
-                .map(el => el.value.toLowerCase());
+                .filter(
+                    el => el.checked
+                )
+                .map(
+                    el =>
+                        el.value.toLowerCase()
+                );
 
         }
 
         // =========================
-        // FILTRAR PRODUCTOS
+        // FILTRAR
         // =========================
 
         function filtrarProductos(){
@@ -112,8 +117,21 @@ document.addEventListener(
 
             productCards.forEach(card => {
 
-                const textoCompleto =
-                    card.textContent
+                const nombre =
+                    card.querySelector("h3")
+                        .textContent
+                        .toLowerCase();
+
+                const categoria =
+                    card.dataset.categoria
+                        .toLowerCase();
+
+                const equipo =
+                    card.dataset.equipo
+                        .toLowerCase();
+
+                const talles =
+                    card.dataset.talles
                         .toLowerCase();
 
                 let visible = true;
@@ -124,12 +142,60 @@ document.addEventListener(
 
                 if(
                     searchText &&
-                    !textoCompleto.includes(
+                    !nombre.includes(
                         searchText
                     )
                 ){
 
                     visible = false;
+
+                }
+
+                // =========================
+                // CATEGORIA
+                // =========================
+
+                if(
+                    selectedTypes.length > 0
+                ){
+
+                    const matchType =
+                        selectedTypes.some(
+                            type =>
+                                categoria.includes(
+                                    type
+                                )
+                        );
+
+                    if(!matchType){
+
+                        visible = false;
+
+                    }
+
+                }
+
+                // =========================
+                // EQUIPO
+                // =========================
+
+                if(
+                    selectedTeams.length > 0
+                ){
+
+                    const matchTeam =
+                        selectedTeams.some(
+                            team =>
+                                equipo.includes(
+                                    team
+                                )
+                        );
+
+                    if(!matchTeam){
+
+                        visible = false;
+
+                    }
 
                 }
 
@@ -144,7 +210,7 @@ document.addEventListener(
                     const matchSize =
                         selectedSizes.some(
                             size =>
-                                textoCompleto.includes(
+                                talles.includes(
                                     size
                                 )
                         );
@@ -158,55 +224,7 @@ document.addEventListener(
                 }
 
                 // =========================
-                // TIPOS
-                // =========================
-
-                if(
-                    selectedTypes.length > 0
-                ){
-
-                    const matchType =
-                        selectedTypes.some(
-                            type =>
-                                textoCompleto.includes(
-                                    type
-                                )
-                        );
-
-                    if(!matchType){
-
-                        visible = false;
-
-                    }
-
-                }
-
-                // =========================
-                // EQUIPOS
-                // =========================
-
-                if(
-                    selectedTeams.length > 0
-                ){
-
-                    const matchTeam =
-                        selectedTeams.some(
-                            team =>
-                                textoCompleto.includes(
-                                    team
-                                )
-                        );
-
-                    if(!matchTeam){
-
-                        visible = false;
-
-                    }
-
-                }
-
-                // =========================
-                // SHOW / HIDE
+                // MOSTRAR / OCULTAR
                 // =========================
 
                 if(visible){
@@ -252,7 +270,7 @@ document.addEventListener(
         });
 
         // =========================
-        // LIMPIAR FILTROS
+        // LIMPIAR
         // =========================
 
         if(clearFiltersBtn){

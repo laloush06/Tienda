@@ -123,5 +123,26 @@
         "imagenes": [
             "/uploads/1781457183488-logo-removebg-preview.png"
         ]
+    },
+    {
+        "id": 8,
+        "nombre": "Camiseta Boca Titular",
+        "precio": 149999,
+        "equipo": "Boca",
+        "tipo": "Club",
+        "categoria": "Camiseta",
+        "talles": [
+            "XS",
+            "S",
+            "M",
+            "L",
+            "XL",
+            "XXL"
+        ],
+        "imagenes": [
+            "/uploads/1781466448837-20358268-1200-auto.webp",
+            "/uploads/1781466448837-20358269-1200-auto.webp",
+            "/uploads/1781466448839-20358270-1200-auto.webp"
+        ]
     }
 ]

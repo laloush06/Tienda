@@ -4,6 +4,8 @@ const path = require("path");
 
 const fs = require("fs");
 
+const session = require("express-session");
+
 const app = express();
 
 /* =========================
@@ -41,6 +43,22 @@ app.use(
 );
 
 /* =========================
+   SESSION
+========================= */
+
+app.use(
+    session({
+
+        secret:"futbolstore_secret",
+
+        resave:false,
+
+        saveUninitialized:false
+
+    })
+);
+
+/* =========================
    HELPERS
 ========================= */
 
@@ -63,6 +81,26 @@ function obtenerProductos(){
 }
 
 /* =========================
+   AUTH MIDDLEWARE
+========================= */
+
+function verificarAdmin(
+    req,
+    res,
+    next
+){
+
+    if(req.session.admin){
+
+        return next();
+
+    }
+
+    res.redirect("/login");
+
+}
+
+/* =========================
    ROUTES
 ========================= */
 
@@ -70,6 +108,66 @@ const adminRoutes =
     require(
         "./routes/admin.routes"
     );
+
+/* =========================
+   LOGIN
+========================= */
+
+app.get("/login", (req, res) => {
+
+    res.render(
+        "pages/login",
+        {
+            error:null
+        }
+    );
+
+});
+
+app.post("/login", (req, res) => {
+
+    const {
+        usuario,
+        password
+    } = req.body;
+
+    // LOGIN SIMPLE
+
+    if(
+        usuario === "admin" &&
+        password === "1234"
+    ){
+
+        req.session.admin = true;
+
+        return res.redirect(
+            "/admin"
+        );
+
+    }
+
+    res.render(
+        "pages/login",
+        {
+            error:"Usuario o contraseña incorrectos"
+        }
+    );
+
+});
+
+/* =========================
+   LOGOUT
+========================= */
+
+app.get("/logout", (req, res) => {
+
+    req.session.destroy(() => {
+
+        res.redirect("/login");
+
+    });
+
+});
 
 /* =========================
    HOME
@@ -141,6 +239,7 @@ app.get("/carrito", (req, res) => {
 
 app.use(
     "/admin",
+    verificarAdmin,
     adminRoutes
 );
 

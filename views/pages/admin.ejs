@@ -37,11 +37,15 @@
             enctype="multipart/form-data"
             class="admin-form">
 
+            <!-- NOMBRE -->
+
             <input
                 type="text"
                 name="nombre"
                 placeholder="Nombre del producto"
                 required>
+
+            <!-- PRECIO -->
 
             <input
                 type="number"
@@ -145,14 +149,41 @@
 
             </select>
 
-            <!-- IMAGENES -->
+            <!-- UPLOAD -->
 
-            <input
-                type="file"
-                name="imagenes"
-                multiple
-                accept="image/*"
-                required>
+            <div class="admin-upload-container">
+
+                <label
+                    for="imageInput"
+                    class="custom-upload">
+
+                    Agregar imágenes
+
+                </label>
+
+                <input
+                    type="file"
+                    id="imageInput"
+                    accept="image/*"
+                    multiple
+                    hidden>
+
+                <!-- INPUT REAL -->
+
+                <input
+                    type="file"
+                    id="realImagesInput"
+                    name="imagenes"
+                    multiple
+                    hidden>
+
+                <div
+                    id="previewContainer"
+                    class="preview-container">
+
+                </div>
+
+            </div>
 
             <!-- TALLES -->
 
@@ -179,6 +210,8 @@
                 </div>
 
             </div>
+
+            <!-- BOTON -->
 
             <button type="submit">
 
@@ -227,6 +260,11 @@
                                 <%= producto.categoria %>
                             </p>
 
+                            <p>
+                                Imágenes:
+                                <%= producto.imagenes.length %>
+                            </p>
+
                         </div>
 
                     </div>
@@ -263,6 +301,98 @@
         </div>
 
     </main>
+
+    <!-- MULTIPLE IMAGES REAL -->
+
+    <script>
+
+        const imageInput =
+            document.getElementById(
+                "imageInput"
+            );
+
+        const realImagesInput =
+            document.getElementById(
+                "realImagesInput"
+            );
+
+        const previewContainer =
+            document.getElementById(
+                "previewContainer"
+            );
+
+        let allFiles = [];
+
+        imageInput.addEventListener(
+            "change",
+            () => {
+
+                const newFiles =
+                    Array.from(
+                        imageInput.files
+                    );
+
+                allFiles = [
+                    ...allFiles,
+                    ...newFiles
+                ];
+
+                const dataTransfer =
+                    new DataTransfer();
+
+                allFiles.forEach(file => {
+
+                    dataTransfer.items.add(
+                        file
+                    );
+
+                });
+
+                realImagesInput.files =
+                    dataTransfer.files;
+
+                renderPreviews();
+
+            }
+        );
+
+        function renderPreviews(){
+
+            previewContainer.innerHTML = "";
+
+            allFiles.forEach(file => {
+
+                const reader =
+                    new FileReader();
+
+                reader.onload = e => {
+
+                    const img =
+                        document.createElement(
+                            "img"
+                        );
+
+                    img.src =
+                        e.target.result;
+
+                    img.classList.add(
+                        "preview-image"
+                    );
+
+                    previewContainer
+                        .appendChild(img);
+
+                };
+
+                reader.readAsDataURL(
+                    file
+                );
+
+            });
+
+        }
+
+    </script>
 
 </body>
 

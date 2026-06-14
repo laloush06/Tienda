@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Login Admin
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/css/styles.css">
+
+</head>
+
+<body>
+
+    <main class="login-page">
+
+        <form
+            action="/login"
+            method="POST"
+            class="login-form">
+
+            <h1>
+                Admin Login
+            </h1>
+
+            <% if(error){ %>
+
+                <p class="login-error">
+
+                    <%= error %>
+
+                </p>
+
+            <% } %>
+
+            <input
+                type="text"
+                name="usuario"
+                placeholder="Usuario"
+                required>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Contraseña"
+                required>
+
+            <button type="submit">
+
+                Ingresar
+
+            </button>
+
+        </form>
+
+    </main>
+
+</body>
+
+</html>
