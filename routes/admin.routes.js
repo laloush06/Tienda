@@ -6,12 +6,15 @@ const multer = require("multer");
 
 const fs = require("fs");
 
+const path = require("path");
+
 const prisma = require("../prismaClient");
 
 const cloudinary =
     require("../cloudinary");
 
 const XLSX = require("xlsx");
+
 /* =========================
    MULTER TEMP
 ========================= */
@@ -529,15 +532,61 @@ router.post(
 
             for(const item of productos){
 
+                // =========================
+                // IMAGENES
+                // =========================
+
                 const imagenes = [];
 
-                if(item.imagen1){
+                const imagenesExcel = [
 
-                    imagenes.push(
-                        item.imagen1
-                    );
+                    item.imagen1,
+
+                    item.imagen2,
+
+                    item.imagen3
+
+                ].filter(Boolean);
+
+                for(const nombreImagen of imagenesExcel){
+
+                    const rutaImagen =
+                        path.join(
+
+                            __dirname,
+
+                            "..",
+
+                            "imagenes",
+
+                            nombreImagen
+
+                        );
+
+                    if(fs.existsSync(rutaImagen)){
+
+                        const resultado =
+                            await cloudinary.uploader.upload(
+
+                                rutaImagen,
+
+                                {
+                                    folder:"tienda"
+                                }
+
+                            );
+
+                        imagenes.push(
+                            resultado.secure_url
+                        );
+
+                    }
 
                 }
+
+                // =========================
+                // CREAR PRODUCTO
+                // =========================
 
                 const productoCreado =
                     await prisma.producto.create({
@@ -548,14 +597,10 @@ router.post(
                                 item.nombre,
 
                             precio:
-                                Number(
-                                    item.precio
-                                ),
+                                Number(item.precio),
 
                             precioOriginal:
-                                Number(
-                                    item.precio
-                                ),
+                                Number(item.precio),
 
                             precioOferta:
                                 Number(
@@ -591,54 +636,40 @@ router.post(
 
                     });
 
+                // =========================
+                // STOCK
+                // =========================
+
                 const talles = [
 
                     {
                         talle:"XS",
-                        cantidad:
-                            Number(
-                                item.XS || 0
-                            )
+                        cantidad:Number(item.XS || 0)
                     },
 
                     {
                         talle:"S",
-                        cantidad:
-                            Number(
-                                item.S || 0
-                            )
+                        cantidad:Number(item.S || 0)
                     },
 
                     {
                         talle:"M",
-                        cantidad:
-                            Number(
-                                item.M || 0
-                            )
+                        cantidad:Number(item.M || 0)
                     },
 
                     {
                         talle:"L",
-                        cantidad:
-                            Number(
-                                item.L || 0
-                            )
+                        cantidad:Number(item.L || 0)
                     },
 
                     {
                         talle:"XL",
-                        cantidad:
-                            Number(
-                                item.XL || 0
-                            )
+                        cantidad:Number(item.XL || 0)
                     },
 
                     {
                         talle:"XXL",
-                        cantidad:
-                            Number(
-                                item.XXL || 0
-                            )
+                        cantidad:Number(item.XXL || 0)
                     }
 
                 ];
