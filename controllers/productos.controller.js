@@ -1,71 +1,117 @@
-const fs = require("fs");
-const path = require("path");
+const prisma = require("../prismaClient");
 
-function obtenerProductos() {
+/* =========================
+   HELPERS
+========================= */
 
-    const ruta = path.join(
-        __dirname,
-        "..",
-        "data",
-        "productos.json"
-    );
+function formatearProducto(producto){
 
-    return JSON.parse(
-        fs.readFileSync(
-            ruta,
-            "utf8"
-        )
-    );
+    const stockObj = {};
+
+    producto.stock.forEach(s => {
+
+        stockObj[s.talle] =
+            s.cantidad;
+
+    });
+
+    return {
+
+        ...producto,
+
+        stock:stockObj
+
+    };
+
 }
 
-const getProductos = (req, res) => {
+/* =========================
+   GET PRODUCTOS
+========================= */
+
+const getProductos = async (req, res) => {
 
     try {
 
         const productos =
-            obtenerProductos();
+            await prisma.producto.findMany({
 
-        res.json(productos);
+                include:{
+                    stock:true
+                },
+
+                orderBy:{
+                    id:"desc"
+                }
+
+            });
+
+        const productosFormateados =
+            productos.map(
+                formatearProducto
+            );
+
+        res.json(
+            productosFormateados
+        );
 
     } catch (error) {
 
+        console.log(error);
+
         res.status(500).json({
-            mensaje: "Error al obtener productos"
+            mensaje:
+                "Error al obtener productos"
         });
 
     }
 
 };
 
-const getProductoById = (req, res) => {
+/* =========================
+   GET PRODUCTO BY ID
+========================= */
+
+const getProductoById = async (req, res) => {
 
     try {
 
         const id =
             parseInt(req.params.id);
 
-        const productos =
-            obtenerProductos();
-
         const producto =
-            productos.find(
-                p => p.id === id
-            );
+            await prisma.producto.findUnique({
+
+                where:{ id },
+
+                include:{
+                    stock:true
+                }
+
+            });
 
         if (!producto) {
 
             return res.status(404).json({
-                mensaje: "Producto no encontrado"
+                mensaje:
+                    "Producto no encontrado"
             });
 
         }
 
-        res.json(producto);
+        res.json(
+            formatearProducto(
+                producto
+            )
+        );
 
     } catch (error) {
 
+        console.log(error);
+
         res.status(500).json({
-            mensaje: "Error al obtener producto"
+            mensaje:
+                "Error al obtener producto"
         });
 
     }

@@ -1726,3 +1726,69 @@ a{
     }
 
 }
+
+/* =========================
+   ADMIN BADGES
+========================= */
+
+.admin-badges{
+
+    grid-column:span 2;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+    flex-wrap:wrap;
+
+    margin-top:10px;
+
+}
+
+.admin-badges label{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    background:#f5f5f5;
+
+    padding:14px 20px;
+
+    border-radius:14px;
+
+    border:1px solid #ddd;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:0.2s;
+
+}
+
+.admin-badges label:hover{
+
+    background:#111;
+
+    color:white;
+
+}
+
+.admin-badges input[type="checkbox"]{
+
+    width:18px;
+
+    height:18px;
+
+    accent-color:#111;
+
+    cursor:pointer;
+
+}
+
+

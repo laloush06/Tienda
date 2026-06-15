@@ -4,9 +4,9 @@ const app = express();
 
 const path = require("path");
 
-const fs = require("fs");
-
 const session = require("express-session");
+
+const prisma = require("./prismaClient");
 
 /* =========================
    CONFIG
@@ -57,24 +57,31 @@ app.use(
 );
 
 /* =========================
-   JSON
+   HELPERS
 ========================= */
 
-const productosPath =
-    path.join(
-        __dirname,
-        "data",
-        "productos.json"
-    );
+function formatearProductos(productos){
 
-function obtenerProductos(){
+    return productos.map(producto => {
 
-    return JSON.parse(
-        fs.readFileSync(
-            productosPath,
-            "utf-8"
-        )
-    );
+        const stockObj = {};
+
+        producto.stock.forEach(s => {
+
+            stockObj[s.talle] =
+                s.cantidad;
+
+        });
+
+        return {
+
+            ...producto,
+
+            stock:stockObj
+
+        };
+
+    });
 
 }
 
@@ -94,16 +101,31 @@ app.use(
    HOME
 ========================= */
 
-app.get("/", (req,res)=>{
+app.get("/", async (req,res)=>{
 
     const productos =
-        obtenerProductos();
+        await prisma.producto.findMany({
+
+            include:{
+                stock:true
+            },
+
+            orderBy:{
+                id:"desc"
+            }
+
+        });
 
     res.render(
         "pages/index",
         {
-            productos,
-            admin:req.session.admin || false
+            productos:
+                formatearProductos(
+                    productos
+                ),
+
+            admin:
+                req.session.admin || false
         }
     );
 
@@ -113,21 +135,31 @@ app.get("/", (req,res)=>{
    OFERTAS
 ========================= */
 
-app.get("/ofertas",(req,res)=>{
+app.get("/ofertas", async (req,res)=>{
 
     const productos =
-        obtenerProductos();
+        await prisma.producto.findMany({
 
-    const ofertas =
-        productos.filter(
-            p => p.oferta
-        );
+            where:{
+                oferta:true
+            },
+
+            include:{
+                stock:true
+            }
+
+        });
 
     res.render(
         "pages/index",
         {
-            productos:ofertas,
-            admin:req.session.admin || false
+            productos:
+                formatearProductos(
+                    productos
+                ),
+
+            admin:
+                req.session.admin || false
         }
     );
 
@@ -137,21 +169,31 @@ app.get("/ofertas",(req,res)=>{
    DESTACADOS
 ========================= */
 
-app.get("/destacados",(req,res)=>{
+app.get("/destacados", async (req,res)=>{
 
     const productos =
-        obtenerProductos();
+        await prisma.producto.findMany({
 
-    const destacados =
-        productos.filter(
-            p => p.destacado
-        );
+            where:{
+                destacado:true
+            },
+
+            include:{
+                stock:true
+            }
+
+        });
 
     res.render(
         "pages/index",
         {
-            productos:destacados,
-            admin:req.session.admin || false
+            productos:
+                formatearProductos(
+                    productos
+                ),
+
+            admin:
+                req.session.admin || false
         }
     );
 
@@ -161,21 +203,31 @@ app.get("/destacados",(req,res)=>{
    NUEVOS
 ========================= */
 
-app.get("/nuevos",(req,res)=>{
+app.get("/nuevos", async (req,res)=>{
 
     const productos =
-        obtenerProductos();
+        await prisma.producto.findMany({
 
-    const nuevos =
-        productos.filter(
-            p => p.nuevo
-        );
+            where:{
+                nuevo:true
+            },
+
+            include:{
+                stock:true
+            }
+
+        });
 
     res.render(
         "pages/index",
         {
-            productos:nuevos,
-            admin:req.session.admin || false
+            productos:
+                formatearProductos(
+                    productos
+                ),
+
+            admin:
+                req.session.admin || false
         }
     );
 
@@ -187,27 +239,42 @@ app.get("/nuevos",(req,res)=>{
 
 app.get(
     "/producto/:id",
-    (req,res)=>{
-
-        const productos =
-            obtenerProductos();
+    async (req,res)=>{
 
         const producto =
-            productos.find(
-                p =>
-                    p.id ==
-                    req.params.id
-            );
+            await prisma.producto.findUnique({
+
+                where:{
+                    id:Number(req.params.id)
+                },
+
+                include:{
+                    stock:true
+                }
+
+            });
 
         if(!producto){
 
             return res.redirect("/");
         }
 
+        const stockObj = {};
+
+        producto.stock.forEach(s => {
+
+            stockObj[s.talle] =
+                s.cantidad;
+
+        });
+
+        producto.stock = stockObj;
+
         res.render(
             "pages/producto",
             {
                 producto,
+
                 admin:
                     req.session.admin
                     || false
@@ -265,8 +332,6 @@ app.post(
             password
         } = req.body;
 
-        // CAMBIAR DESPUES
-
         const ADMIN_USER =
             "admin";
 
@@ -298,7 +363,6 @@ app.post(
     }
 );
 
-
 /* =========================
    LOGOUT
 ========================= */
@@ -311,6 +375,7 @@ app.get(
             () => {
 
                 res.redirect("/");
+
             }
         );
 
@@ -333,3 +398,4 @@ app.listen(
 
     }
 );
+
