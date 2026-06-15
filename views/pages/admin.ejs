@@ -42,43 +42,45 @@
 
         </div>
 
-<!-- =========================
-     IMPORTAR EXCEL
-========================= -->
+        <!-- =========================
+             IMPORTAR EXCEL
+        ========================= -->
 
-<form
-    action="/admin/importar"
-    method="POST"
-    enctype="multipart/form-data"
-    class="excel-import-form">
+        <form
+            action="/admin/importar"
+            method="POST"
+            enctype="multipart/form-data"
+            class="excel-import-form">
 
-    <h2>
+            <h2>
 
-        Importar productos Excel
+                Importar productos Excel
 
-    </h2>
+            </h2>
 
-    <p>
+            <p>
 
-        Subí un archivo .xlsx con productos y stock
+                Subí un archivo .xlsx con productos y stock
 
-    </p>
+            </p>
 
-    <input
-        type="file"
-        name="excel"
-        accept=".xlsx,.xls"
-        required>
+            <input
+                type="file"
+                name="excel"
+                accept=".xlsx,.xls"
+                required>
 
-    <button type="submit">
+            <button type="submit">
 
-        Importar Excel
+                Importar Excel
 
-    </button>
+            </button>
 
-</form>
+        </form>
 
-        <!-- FORM -->
+        <!-- =========================
+             FORM
+        ========================= -->
 
         <form
 
@@ -187,7 +189,9 @@
                 class="admin-description"
                 required><%= editar ? editar.descripcion : '' %></textarea>
 
-            <!-- STOCK -->
+            <!-- =========================
+                 STOCK
+            ========================= -->
 
             <div class="admin-stock-wrapper">
 
@@ -270,7 +274,9 @@
 
             </div>
 
-            <!-- BADGES -->
+            <!-- =========================
+                 BADGES
+            ========================= -->
 
             <div class="admin-badges">
 
@@ -298,35 +304,67 @@
 
             </div>
 
-            <!-- IMAGENES -->
+            <!-- =========================
+                 IMAGENES
+            ========================= -->
 
+            <div class="image-upload-wrapper">
 
-            <div class="admin-upload-container">
+                <h2>
 
-                <label class="custom-upload">
+                    Seleccionar imágenes
 
-                    <span>
-                        Seleccionar imágenes
-                    </span>
+                </h2>
 
-                    <input
-                        type="file"
-                        name="imagenes"
-                        id="imagenesInput"
-                        multiple
-                        accept="image/*">
+                <div class="image-upload-grid">
 
-                </label>
+                    <% for(let i = 0; i < 5; i++){ %>
 
-                <div
-                    id="previewContainer"
-                    class="preview-container">
+                        <label class="image-upload-card">
+
+                            <input
+
+                                type="file"
+
+                                name="imagenes"
+
+                                accept="image/*"
+
+                                class="image-input"
+
+                                onchange="previewImage(event, <%= i %>)">
+
+                            <div
+                                class="image-preview"
+                                id="preview-<%= i %>">
+
+                                <span>
+
+                                    +
+
+                                </span>
+
+                                <p>
+
+                                    <%= i === 0
+                                        ? "Portada"
+                                        : `Imagen ${i + 1}` %>
+
+                                </p>
+
+                            </div>
+
+                        </label>
+
+                    <% } %>
 
                 </div>
 
             </div>
 
-            <!-- BOTON -->
+            <!-- =========================
+                 BOTON
+            ========================= -->
 
             <button type="submit">
 
@@ -338,7 +376,9 @@
 
         </form>
 
-        <!-- PRODUCTOS -->
+        <!-- =========================
+             PRODUCTOS
+        ========================= -->
 
         <div class="cart-container">
 
@@ -413,88 +453,61 @@
 
     <script>
 
-        function cambiarStock(id,cambio){
+    function cambiarStock(id,cambio){
 
-            const input =
-                document.getElementById(id);
+        const input =
+            document.getElementById(id);
 
-            let valor =
-                Number(input.value);
+        let valor =
+            Number(input.value);
 
-            valor += cambio;
+        valor += cambio;
 
-            if(valor < 0){
+        if(valor < 0){
 
-                valor = 0;
-
-            }
-
-            input.value = valor;
+            valor = 0;
 
         }
 
-    </script>
+        input.value = valor;
 
-    <script>
+    }
 
-    const imagenesInput =
-        document.getElementById(
-            "imagenesInput"
-        );
+    function previewImage(event,index){
 
-    const previewContainer =
-        document.getElementById(
-            "previewContainer"
-        );
+        const file =
+            event.target.files[0];
 
-    imagenesInput.addEventListener(
-        "change",
-        () => {
+        if(!file) return;
 
-            previewContainer.innerHTML = "";
+        const reader =
+            new FileReader();
 
-            const files =
-                imagenesInput.files;
+        reader.onload =
+            function(e){
 
-            for(const file of files){
+                const preview =
+                    document.getElementById(
+                        `preview-${index}`
+                    );
 
-                const reader =
-                    new FileReader();
+                preview.innerHTML = `
 
-                reader.onload =
-                    e => {
+                    <img
+                        src="${e.target.result}"
+                        class="preview-img"
+                        alt="preview">
 
-                        const img =
-                            document.createElement(
-                                "img"
-                            );
+                `;
 
-                        img.src =
-                            e.target.result;
+            };
 
-                        img.classList.add(
-                            "preview-image"
-                        );
+        reader.readAsDataURL(file);
 
-                        previewContainer.appendChild(
-                            img
-                        );
-
-                    };
-
-                reader.readAsDataURL(
-                    file
-                );
-
-            }
-
-        }
-    );
+    }
 
     </script>
-
 
 </body>
 
 </html>
-
