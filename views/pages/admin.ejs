@@ -264,19 +264,29 @@
 
             <!-- IMAGENES -->
 
+
             <div class="admin-upload-container">
 
                 <label class="custom-upload">
 
-                    Seleccionar imágenes
+                    <span>
+                        Seleccionar imágenes
+                    </span>
 
                     <input
                         type="file"
                         name="imagenes"
+                        id="imagenesInput"
                         multiple
-                        hidden>
+                        accept="image/*">
 
                 </label>
+
+                <div
+                    id="previewContainer"
+                    class="preview-container">
+
+                </div>
 
             </div>
 
@@ -388,6 +398,65 @@
         }
 
     </script>
+
+    <script>
+
+    const imagenesInput =
+        document.getElementById(
+            "imagenesInput"
+        );
+
+    const previewContainer =
+        document.getElementById(
+            "previewContainer"
+        );
+
+    imagenesInput.addEventListener(
+        "change",
+        () => {
+
+            previewContainer.innerHTML = "";
+
+            const files =
+                imagenesInput.files;
+
+            for(const file of files){
+
+                const reader =
+                    new FileReader();
+
+                reader.onload =
+                    e => {
+
+                        const img =
+                            document.createElement(
+                                "img"
+                            );
+
+                        img.src =
+                            e.target.result;
+
+                        img.classList.add(
+                            "preview-image"
+                        );
+
+                        previewContainer.appendChild(
+                            img
+                        );
+
+                    };
+
+                reader.readAsDataURL(
+                    file
+                );
+
+            }
+
+        }
+    );
+
+    </script>
+
 
 </body>
 

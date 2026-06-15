@@ -4,32 +4,40 @@ const router = express.Router();
 
 const multer = require("multer");
 
+const fs = require("fs");
+
 const prisma = require("../prismaClient");
 
+const cloudinary =
+    require("../cloudinary");
+
 /* =========================
-   MULTER
+   MULTER LOCAL TEMP
 ========================= */
 
-const storage = multer.diskStorage({
+const storage =
+    multer.diskStorage({
 
-    destination:(req,file,cb)=>{
+        destination:
+            (req,file,cb)=>{
 
-        cb(null,"public/img");
+                cb(null,"temp");
 
-    },
+            },
 
-    filename:(req,file,cb)=>{
+        filename:
+            (req,file,cb)=>{
 
-        cb(
-            null,
-            Date.now() +
-            "-" +
-            file.originalname
-        );
+                cb(
+                    null,
+                    Date.now() +
+                    "-" +
+                    file.originalname
+                );
 
-    }
+            }
 
-});
+    });
 
 const upload = multer({
     storage
@@ -122,243 +130,108 @@ router.post(
     upload.array("imagenes",10),
     async (req,res)=>{
 
-        if(!req.session.admin){
+        try{
 
-            return res.redirect("/");
+            if(!req.session.admin){
 
-        }
+                return res.redirect("/");
 
-        const imagenes =
-            req.files &&
-            req.files.length > 0
-                ? req.files.map(
-                    file =>
-                        "/img/" +
-                        file.filename
-                )
-                : [];
+            }
 
-        const precioOriginal =
-            Number(
-                req.body.precioOriginal
-            );
+            const imagenes = [];
 
-        const precioOferta =
-            Number(
-                req.body.precioOferta || 0
-            );
+            if(req.files){
 
-        const stock =
-            crearStock(req.body);
+                for(const file of req.files){
 
-        await prisma.producto.create({
+                    const resultado =
+                        await cloudinary.uploader.upload(
+                            file.path,
+                            {
+                                folder:"tienda"
+                            }
+                        );
 
-            data:{
+                    imagenes.push(
+                        resultado.secure_url
+                    );
 
-                nombre:req.body.nombre,
+                    fs.unlinkSync(
+                        file.path
+                    );
 
-                precio:
-                    precioOferta > 0
-                        ? precioOferta
-                        : precioOriginal,
-
-                precioOriginal,
-
-                precioOferta,
-
-                equipo:req.body.equipo,
-
-                categoria:req.body.categoria,
-
-                descripcion:req.body.descripcion,
-
-                imagenes,
-
-                nuevo:
-                    req.body.nuevo === "on",
-
-                oferta:
-                    precioOferta > 0,
-
-                destacado:
-                    req.body.destacado === "on",
-
-                stock:{
-                    create:stock
                 }
 
             }
 
-        });
+            const precioOriginal =
+                Number(
+                    req.body.precioOriginal
+                );
 
-        res.redirect("/admin");
+            const precioOferta =
+                Number(
+                    req.body.precioOferta || 0
+                );
 
-    }
-);
+            const stock =
+                crearStock(req.body);
 
-/* =========================
-   EDITAR PAGE
-========================= */
+            await prisma.producto.create({
 
-router.get(
-    "/editar/:id",
-    async (req,res)=>{
+                data:{
 
-        if(!req.session.admin){
+                    nombre:req.body.nombre,
 
-            return res.redirect("/");
+                    precio:
+                        precioOferta > 0
+                            ? precioOferta
+                            : precioOriginal,
 
-        }
+                    precioOriginal,
 
-        const productos =
-            await prisma.producto.findMany({
+                    precioOferta,
 
-                include:{
-                    stock:true
+                    equipo:req.body.equipo,
+
+                    categoria:req.body.categoria,
+
+                    descripcion:req.body.descripcion,
+
+                    imagenes,
+
+                    nuevo:
+                        req.body.nuevo === "on",
+
+                    oferta:
+                        precioOferta > 0,
+
+                    destacado:
+                        req.body.destacado === "on",
+
+                    stock:{
+                        create:stock
+                    }
+
                 }
 
             });
 
-        const productoEditar =
-            await prisma.producto.findUnique({
-
-                where:{
-                    id:Number(req.params.id)
-                },
-
-                include:{
-                    stock:true
-                }
-
-            });
-
-        if(!productoEditar){
-
-            return res.redirect(
-                "/admin"
-            );
+            res.redirect("/admin");
 
         }
 
-        res.render(
-            "pages/admin",
-            {
-                productos,
-                productoEditar,
-                admin:true
-            }
-        );
+        catch(error){
 
-    }
-);
+            console.log(error);
 
-/* =========================
-   EDITAR
-========================= */
-
-router.post(
-    "/editar/:id",
-    upload.array("imagenes",10),
-    async (req,res)=>{
-
-        if(!req.session.admin){
-
-            return res.redirect("/");
+            res.send(`
+                <pre>
+${JSON.stringify(error,null,2)}
+                </pre>
+            `);
 
         }
-
-        const id =
-            Number(req.params.id);
-
-        const producto =
-            await prisma.producto.findUnique({
-
-                where:{ id },
-
-                include:{
-                    stock:true
-                }
-
-            });
-
-        if(!producto){
-
-            return res.redirect("/admin");
-
-        }
-
-        const precioOriginal =
-            Number(
-                req.body.precioOriginal
-            );
-
-        const precioOferta =
-            Number(
-                req.body.precioOferta || 0
-            );
-
-        const imagenes =
-            req.files &&
-            req.files.length > 0
-                ? req.files.map(
-                    file =>
-                        "/img/" +
-                        file.filename
-                )
-                : producto.imagenes;
-
-        await prisma.stock.deleteMany({
-
-            where:{
-                productoId:id
-            }
-
-        });
-
-        await prisma.producto.update({
-
-            where:{ id },
-
-            data:{
-
-                nombre:req.body.nombre,
-
-                precio:
-                    precioOferta > 0
-                        ? precioOferta
-                        : precioOriginal,
-
-                precioOriginal,
-
-                precioOferta,
-
-                equipo:req.body.equipo,
-
-                categoria:req.body.categoria,
-
-                descripcion:req.body.descripcion,
-
-                imagenes,
-
-                nuevo:
-                    req.body.nuevo === "on",
-
-                oferta:
-                    precioOferta > 0,
-
-                destacado:
-                    req.body.destacado === "on",
-
-                stock:{
-                    create:
-                        crearStock(req.body)
-                }
-
-            }
-
-        });
-
-        res.redirect("/admin");
 
     }
 );

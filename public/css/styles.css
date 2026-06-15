@@ -1791,4 +1791,96 @@ a{
 
 }
 
+/* =========================
+   IMAGE UPLOAD
+========================= */
 
+.admin-upload-container{
+
+    grid-column:span 2;
+
+}
+
+.custom-upload{
+
+    width:100%;
+
+    min-height:160px;
+
+    border:2px dashed #ccc;
+
+    border-radius:24px;
+
+    background:#fafafa;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:20px;
+
+    cursor:pointer;
+
+    transition:0.2s;
+
+    padding:30px;
+
+}
+
+.custom-upload:hover{
+
+    border-color:#111;
+
+    background:#f3f3f3;
+
+}
+
+.custom-upload span{
+
+    font-size:18px;
+
+    font-weight:700;
+
+}
+
+.custom-upload input[type="file"]{
+
+    width:100%;
+
+    cursor:pointer;
+
+}
+
+.preview-container{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:15px;
+
+    margin-top:20px;
+
+}
+
+.preview-image{
+
+    width:140px;
+
+    height:140px;
+
+    object-fit:cover;
+
+    border-radius:20px;
+
+    border:1px solid #ddd;
+
+    box-shadow:
+        0 4px 12px
+        rgba(0,0,0,0.08);
+
+}
