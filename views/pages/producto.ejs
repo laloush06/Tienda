@@ -214,10 +214,15 @@
 
                         <% ["XS","S","M","L","XL","XXL"].forEach(talle => {
 
+                            const stockItem =
+                                producto.stock.find(
+                                    s => s.talle === talle
+                                );
+
                             const stock =
-                                producto.stock
-                                ? Number(producto.stock[talle] || 0)
-                                : 0;
+                                stockItem
+                                    ? stockItem.cantidad
+                                    : 0;
 
                             const agotado =
                                 stock <= 0;
@@ -374,7 +379,17 @@
                         btn.dataset.stock
                     );
 
-                if(stock === 1){
+                if(stock <= 0){
+
+                    stockMessage.innerHTML =
+                        "Sin stock";
+
+                    stockMessage.className =
+                        "stock-message no-stock";
+
+                }
+
+                else if(stock === 1){
 
                     stockMessage.innerHTML =
                         "Última unidad disponible";
@@ -382,7 +397,9 @@
                     stockMessage.className =
                         "stock-message low-stock";
 
-                } else {
+                }
+
+                else {
 
                     stockMessage.innerHTML =
                         `Stock disponible: ${stock}`;
@@ -507,4 +524,3 @@
 </body>
 
 </html>
-

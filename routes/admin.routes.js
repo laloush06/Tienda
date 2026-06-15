@@ -12,7 +12,7 @@ const cloudinary =
     require("../cloudinary");
 
 /* =========================
-   MULTER LOCAL TEMP
+   MULTER TEMP
 ========================= */
 
 const storage =
@@ -86,7 +86,7 @@ function crearStock(body){
 }
 
 /* =========================
-   ADMIN PAGE
+   ADMIN
 ========================= */
 
 router.get("/", async (req,res)=>{
@@ -94,7 +94,6 @@ router.get("/", async (req,res)=>{
     if(!req.session.admin){
 
         return res.redirect("/");
-
     }
 
     const productos =
@@ -135,7 +134,6 @@ router.post(
             if(!req.session.admin){
 
                 return res.redirect("/");
-
             }
 
             const imagenes = [];
@@ -174,48 +172,69 @@ router.post(
                     req.body.precioOferta || 0
                 );
 
+            const productoCreado =
+                await prisma.producto.create({
+
+                    data:{
+
+                        nombre:
+                            req.body.nombre,
+
+                        precio:
+                            precioOferta > 0
+                                ? precioOferta
+                                : precioOriginal,
+
+                        precioOriginal,
+
+                        precioOferta,
+
+                        equipo:
+                            req.body.equipo,
+
+                        categoria:
+                            req.body.categoria,
+
+                        descripcion:
+                            req.body.descripcion ||
+                            "Sin descripción",
+
+                        imagenes,
+
+                        nuevo:
+                            req.body.nuevo === "on",
+
+                        oferta:
+                            precioOferta > 0,
+
+                        destacado:
+                            req.body.destacado === "on"
+
+                    }
+
+                });
+
             const stock =
                 crearStock(req.body);
 
-            await prisma.producto.create({
+            for(const item of stock){
 
-                data:{
+                await prisma.stock.create({
 
-                    nombre:req.body.nombre,
+                    data:{
 
-                    precio:
-                        precioOferta > 0
-                            ? precioOferta
-                            : precioOriginal,
+                        talle:item.talle,
 
-                    precioOriginal,
+                        cantidad:item.cantidad,
 
-                    precioOferta,
+                        productoId:
+                            productoCreado.id
 
-                    equipo:req.body.equipo,
-
-                    categoria:req.body.categoria,
-
-                    descripcion:req.body.descripcion,
-
-                    imagenes,
-
-                    nuevo:
-                        req.body.nuevo === "on",
-
-                    oferta:
-                        precioOferta > 0,
-
-                    destacado:
-                        req.body.destacado === "on",
-
-                    stock:{
-                        create:stock
                     }
 
-                }
+                });
 
-            });
+            }
 
             res.redirect("/admin");
 
@@ -225,11 +244,7 @@ router.post(
 
             console.log(error);
 
-            res.send(`
-                <pre>
-${JSON.stringify(error,null,2)}
-                </pre>
-            `);
+            res.send(error.message);
 
         }
 
@@ -247,8 +262,15 @@ router.post(
         if(!req.session.admin){
 
             return res.redirect("/");
-
         }
+
+        await prisma.stock.deleteMany({
+
+            where:{
+                productoId:Number(req.params.id)
+            }
+
+        });
 
         await prisma.producto.delete({
 
