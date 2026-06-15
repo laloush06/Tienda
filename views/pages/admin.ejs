@@ -42,6 +42,42 @@
 
         </div>
 
+<!-- =========================
+     IMPORTAR EXCEL
+========================= -->
+
+<form
+    action="/admin/importar"
+    method="POST"
+    enctype="multipart/form-data"
+    class="excel-import-form">
+
+    <h2>
+
+        Importar productos Excel
+
+    </h2>
+
+    <p>
+
+        Subí un archivo .xlsx con productos y stock
+
+    </p>
+
+    <input
+        type="file"
+        name="excel"
+        accept=".xlsx,.xls"
+        required>
+
+    <button type="submit">
+
+        Importar Excel
+
+    </button>
+
+</form>
+
         <!-- FORM -->
 
         <form
