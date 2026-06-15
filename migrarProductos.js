@@ -1,108 +1,127 @@
+require("dotenv").config();
+
+const fs = require("fs");
+
+const path = require("path");
+
 const prisma = require("./prismaClient");
 
-async function migrar(){
+async function importar(){
 
-    const ruta =
-        path.join(
-            __dirname,
-            "data",
-            "productos.json"
-        );
+    try{
 
-    const productos =
-        JSON.parse(
-            fs.readFileSync(
-                ruta,
-                "utf-8"
-            )
-        );
+        const ruta =
+            path.join(
+                __dirname,
+                "data",
+                "productos.json"
+            );
 
-    for(const producto of productos){
+        const productos =
+            JSON.parse(
+                fs.readFileSync(
+                    ruta,
+                    "utf-8"
+                )
+            );
 
-        const stockArray = [];
+        for(const producto of productos){
 
-        if(producto.stock){
+            const productoCreado =
+                await prisma.producto.create({
 
-            for(const talle in producto.stock){
+                    data:{
 
-                stockArray.push({
+                        nombre:
+                            producto.nombre,
 
-                    talle,
+                        precio:
+                            producto.precio,
 
-                    cantidad:
-                        Number(
-                            producto.stock[talle]
-                        )
+                        precioOriginal:
+                            producto.precioOriginal || producto.precio,
+
+                        precioOferta:
+                            producto.precioOferta || 0,
+
+                        equipo:
+                            producto.equipo,
+
+                        categoria:
+                            producto.categoria,
+
+                        descripcion:
+                            producto.descripcion ||
+                            "Sin descripción",
+
+                        imagenes:
+                            producto.imagenes || [],
+
+                        nuevo:
+                            producto.nuevo || false,
+
+                        oferta:
+                            producto.oferta || false,
+
+                        destacado:
+                            producto.destacado || false
+
+                    }
 
                 });
+
+            if(producto.stock){
+
+                const stockArray =
+                    Object.entries(
+                        producto.stock
+                    );
+
+                for(const [
+                    talle,
+                    cantidad
+                ] of stockArray){
+
+                    await prisma.stock.create({
+
+                        data:{
+
+                            talle,
+
+                            cantidad:
+                                Number(cantidad),
+
+                            productoId:
+                                productoCreado.id
+
+                        }
+
+                    });
+
+                }
 
             }
 
         }
 
-        await prisma.producto.create({
-
-            data:{
-
-                nombre:
-                    producto.nombre,
-
-                precio:
-                    producto.precio,
-
-                precioOriginal:
-                    producto.precioOriginal || producto.precio,
-
-                precioOferta:
-                    producto.precioOferta || 0,
-
-                equipo:
-                    producto.equipo || "",
-
-                categoria:
-                    producto.categoria || "",
-
-                descripcion:
-                    producto.descripcion || "",
-
-                imagenes:
-                    producto.imagenes || [],
-
-                nuevo:
-                    producto.nuevo || false,
-
-                oferta:
-                    producto.oferta || false,
-
-                destacado:
-                    producto.destacado || false,
-
-                stock:{
-                    create:stockArray
-                }
-
-            }
-
-        });
+        console.log(
+            "PRODUCTOS IMPORTADOS ✅"
+        );
 
     }
 
-    console.log(
-        "PRODUCTOS MIGRADOS"
-    );
+    catch(error){
+
+        console.log(error);
+
+    }
+
+    finally{
+
+        await prisma.$disconnect();
+
+    }
 
 }
 
-migrar()
-.then(async()=>{
-
-    await prisma.$disconnect();
-
-})
-.catch(async(error)=>{
-
-    console.log(error);
-
-    await prisma.$disconnect();
-
-});
+importar();
