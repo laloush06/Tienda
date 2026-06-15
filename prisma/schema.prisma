@@ -1,53 +1,61 @@
 generator client {
-  provider = "prisma-client-js"
+
+  provider      = "prisma-client-js"
+
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+
 }
 
 datasource db {
+
   provider = "postgresql"
+
   url      = env("DATABASE_URL")
+
 }
 
 model Producto {
 
-  id               Int      @id @default(autoincrement())
+  id              Int       @id @default(autoincrement())
 
-  nombre           String
+  nombre          String
 
-  precio           Int
+  precio          Int
 
-  precioOriginal   Int
+  precioOriginal  Int
 
-  precioOferta     Int
+  precioOferta    Int
 
-  equipo           String
+  equipo          String
 
-  categoria        String
+  categoria       String
 
-  descripcion      String
+  descripcion     String
 
-  imagenes         String[]
+  imagenes        String[]
 
-  nuevo            Boolean  @default(false)
+  nuevo           Boolean   @default(false)
 
-  oferta           Boolean  @default(false)
+  oferta          Boolean   @default(false)
 
-  destacado        Boolean  @default(false)
+  destacado       Boolean   @default(false)
 
-  createdAt        DateTime @default(now())
+  createdAt       DateTime  @default(now())
 
-  stock            Stock[]
+  stock           Stock[]
+
 }
 
 model Stock {
 
-  id           Int @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
 
-  talle        String
+  talle       String
 
-  cantidad     Int
+  cantidad    Int
 
-  productoId   Int
+  productoId  Int
 
-  producto     Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  producto    Producto  @relation(fields: [productoId],references: [id],onDelete: Cascade)
 
 }
