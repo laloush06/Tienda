@@ -32,8 +32,6 @@
 
     <div class="cart-page">
 
-        <!-- TOP -->
-
         <div class="products-topbar">
 
             <h1>
@@ -41,18 +39,6 @@
                 Panel Admin
 
             </h1>
-
-            <a
-                href="/logout"
-                class="go-cart-btn"
-                style="
-                    width:auto;
-                    padding:14px 20px;
-                ">
-
-                Logout
-
-            </a>
 
         </div>
 
@@ -75,18 +61,24 @@
                 name="nombre"
                 placeholder="Nombre"
                 required
-
                 value="<%= editar ? editar.nombre : '' %>">
 
-            <!-- PRECIO -->
+            <!-- PRECIO ORIGINAL -->
 
             <input
                 type="number"
-                name="precio"
-                placeholder="Precio"
+                name="precioOriginal"
+                placeholder="Precio original"
                 required
+                value="<%= editar ? editar.precioOriginal || editar.precio : '' %>">
 
-                value="<%= editar ? editar.precio : '' %>">
+            <!-- PRECIO OFERTA -->
+
+            <input
+                type="number"
+                name="precioOferta"
+                placeholder="Precio oferta"
+                value="<%= editar ? editar.precioOferta || '' : '' %>">
 
             <!-- EQUIPO -->
 
@@ -109,13 +101,8 @@
                 ].forEach(equipo => { %>
 
                     <option
-
                         value="<%= equipo %>"
-
-                        <%= editar &&
-                            editar.equipo === equipo
-                            ? 'selected'
-                            : '' %>>
+                        <%= editar && editar.equipo === equipo ? 'selected' : '' %>>
 
                         <%= equipo %>
 
@@ -145,13 +132,8 @@
                 ].forEach(cat => { %>
 
                     <option
-
                         value="<%= cat %>"
-
-                        <%= editar &&
-                            editar.categoria === cat
-                            ? 'selected'
-                            : '' %>>
+                        <%= editar && editar.categoria === cat ? 'selected' : '' %>>
 
                         <%= cat %>
 
@@ -164,24 +146,22 @@
             <!-- DESCRIPCION -->
 
             <textarea
-
                 name="descripcion"
-
-                placeholder="Descripción del producto"
-
+                placeholder="Descripción"
                 class="admin-description"
-
                 required><%= editar ? editar.descripcion : '' %></textarea>
 
-            <!-- TALLES -->
+            <!-- STOCK -->
 
-            <div class="admin-talles">
+            <div class="admin-stock-wrapper">
 
                 <h3>
-                    Talles
+
+                    Stock por talle
+
                 </h3>
 
-                <div class="admin-talles-grid">
+                <div class="admin-stock-grid">
 
                     <% [
                         "XS",
@@ -192,21 +172,61 @@
                         "XXL"
                     ].forEach(talle => { %>
 
-                        <label>
+                        <div class="stock-item">
 
-                            <input
-                                type="checkbox"
-                                name="talles"
-                                value="<%= talle %>"
+                            <label class="stock-title">
 
-                                <%= editar &&
-                                    editar.talles.includes(talle)
-                                    ? 'checked'
-                                    : '' %>>
+                                <%= talle %>
 
-                            <%= talle %>
+                            </label>
 
-                        </label>
+                            <div class="stock-controls">
+
+                                <button
+                                    type="button"
+                                    class="stock-btn"
+                                    onclick="
+                                        cambiarStock(
+                                            'stock<%= talle %>',
+                                            -1
+                                        )
+                                    ">
+
+                                    -
+
+                                </button>
+
+                                <input
+
+                                    type="number"
+
+                                    id="stock<%= talle %>"
+
+                                    name="stock<%= talle %>"
+
+                                    class="stock-input"
+
+                                    min="0"
+
+                                    value="<%= editar && editar.stock ? editar.stock[talle] || 0 : 0 %>">
+
+                                <button
+                                    type="button"
+                                    class="stock-btn"
+                                    onclick="
+                                        cambiarStock(
+                                            'stock<%= talle %>',
+                                            1
+                                        )
+                                    ">
+
+                                    +
+
+                                </button>
+
+                            </div>
+
+                        </div>
 
                     <% }) %>
 
@@ -223,11 +243,7 @@
                     <input
                         type="checkbox"
                         name="nuevo"
-
-                        <%= editar &&
-                            editar.nuevo
-                            ? 'checked'
-                            : '' %>>
+                        <%= editar && editar.nuevo ? 'checked' : '' %>>
 
                     Nuevo
 
@@ -237,27 +253,8 @@
 
                     <input
                         type="checkbox"
-                        name="oferta"
-
-                        <%= editar &&
-                            editar.oferta
-                            ? 'checked'
-                            : '' %>>
-
-                    Oferta
-
-                </label>
-
-                <label>
-
-                    <input
-                        type="checkbox"
                         name="destacado"
-
-                        <%= editar &&
-                            editar.destacado
-                            ? 'checked'
-                            : '' %>>
+                        <%= editar && editar.destacado ? 'checked' : '' %>>
 
                     Destacado
 
@@ -303,8 +300,6 @@
 
                 <div class="cart-item">
 
-                    <!-- IZQUIERDA -->
-
                     <div class="admin-product-left">
 
                         <img
@@ -325,45 +320,31 @@
 
                             </p>
 
-                            <p>
-
-                                <%= producto.categoria %>
-
-                            </p>
-
                         </div>
 
                     </div>
 
-                    <!-- BOTONES -->
-
                     <div class="admin-buttons">
 
-                        <!-- EDITAR -->
+                        <a
+                            href="/producto/<%= producto.id %>"
+                            class="go-cart-btn">
+
+                            Ver
+
+                        </a>
 
                         <a
-
                             href="/admin/editar/<%= producto.id %>"
-
                             class="go-cart-btn">
 
                             Editar
 
                         </a>
 
-                        <!-- ELIMINAR -->
-
                         <form
-
                             action="/admin/eliminar/<%= producto.id %>"
-
-                            method="POST"
-
-                            onsubmit="
-                                return confirm(
-                                    '¿Eliminar producto?'
-                                )
-                            ">
+                            method="POST">
 
                             <button
                                 class="remove-btn">
@@ -384,6 +365,31 @@
 
     </div>
 
+    <script>
+
+        function cambiarStock(id,cambio){
+
+            const input =
+                document.getElementById(id);
+
+            let valor =
+                Number(input.value);
+
+            valor += cambio;
+
+            if(valor < 0){
+
+                valor = 0;
+
+            }
+
+            input.value = valor;
+
+        }
+
+    </script>
+
 </body>
 
 </html>
+

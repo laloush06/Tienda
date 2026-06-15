@@ -1,12 +1,12 @@
 const express = require("express");
 
+const app = express();
+
 const path = require("path");
 
 const fs = require("fs");
 
 const session = require("express-session");
-
-const app = express();
 
 /* =========================
    CONFIG
@@ -26,7 +26,7 @@ app.set(
 );
 
 /* =========================
-   MIDDLEWARE
+   MIDDLEWARES
 ========================= */
 
 app.use(
@@ -48,34 +48,26 @@ app.use(
     )
 );
 
-/* =========================
-   SESSION
-========================= */
-
 app.use(
     session({
-
-        secret:"futbolstore_secret",
-
+        secret:"tienda-secret",
         resave:false,
-
-        saveUninitialized:false
-
+        saveUninitialized:true
     })
 );
 
 /* =========================
-   HELPERS
+   JSON
 ========================= */
 
-function obtenerProductos(){
+const productosPath =
+    path.join(
+        __dirname,
+        "data",
+        "productos.json"
+    );
 
-    const productosPath =
-        path.join(
-            __dirname,
-            "data",
-            "productos.json"
-        );
+function obtenerProductos(){
 
     return JSON.parse(
         fs.readFileSync(
@@ -87,205 +79,107 @@ function obtenerProductos(){
 }
 
 /* =========================
-   AUTH
-========================= */
-
-function verificarAdmin(
-    req,
-    res,
-    next
-){
-
-    if(req.session.admin){
-
-        return next();
-
-    }
-
-    res.redirect(
-        "/login"
-    );
-
-}
-
-/* =========================
    ROUTES
 ========================= */
 
 const adminRoutes =
-    require(
-        "./routes/admin.routes"
-    );
+    require("./routes/admin.routes");
 
 app.use(
     "/admin",
-    verificarAdmin,
     adminRoutes
-);
-
-/* =========================
-   LOGIN
-========================= */
-
-app.get(
-    "/login",
-    (req,res)=>{
-
-        res.render(
-            "pages/login",
-            {
-                error:null
-            }
-        );
-
-    }
-);
-
-app.post(
-    "/login",
-    (req,res)=>{
-
-        const {
-            usuario,
-            password
-        } = req.body;
-
-        if(
-            usuario === "admin"
-            &&
-            password === "1234"
-        ){
-
-            req.session.admin = true;
-
-            return res.redirect(
-                "/admin"
-            );
-
-        }
-
-        res.render(
-            "pages/login",
-            {
-                error:
-                    "Usuario o contraseña incorrectos"
-            }
-        );
-
-    }
-);
-
-/* =========================
-   LOGOUT
-========================= */
-
-app.get(
-    "/logout",
-    (req,res)=>{
-
-        req.session.destroy(()=>{
-
-            res.redirect(
-                "/login"
-            );
-
-        });
-
-    }
 );
 
 /* =========================
    HOME
 ========================= */
 
-app.get(
-    "/",
-    (req,res)=>{
+app.get("/", (req,res)=>{
 
-        const productos =
-            obtenerProductos();
+    const productos =
+        obtenerProductos();
 
-        res.render(
-            "pages/index",
-            {
-                productos
-            }
-        );
+    res.render(
+        "pages/index",
+        {
+            productos,
+            admin:req.session.admin || false
+        }
+    );
 
-    }
-);
-
-/* =========================
-   DESTACADOS
-========================= */
-
-app.get(
-    "/destacados",
-    (req,res)=>{
-
-        const productos =
-            obtenerProductos()
-                .filter(
-                    p => p.destacado
-                );
-
-        res.render(
-            "pages/index",
-            {
-                productos
-            }
-        );
-
-    }
-);
+});
 
 /* =========================
    OFERTAS
 ========================= */
 
-app.get(
-    "/ofertas",
-    (req,res)=>{
+app.get("/ofertas",(req,res)=>{
 
-        const productos =
-            obtenerProductos()
-                .filter(
-                    p => p.oferta
-                );
+    const productos =
+        obtenerProductos();
 
-        res.render(
-            "pages/index",
-            {
-                productos
-            }
+    const ofertas =
+        productos.filter(
+            p => p.oferta
         );
 
-    }
-);
+    res.render(
+        "pages/index",
+        {
+            productos:ofertas,
+            admin:req.session.admin || false
+        }
+    );
+
+});
+
+/* =========================
+   DESTACADOS
+========================= */
+
+app.get("/destacados",(req,res)=>{
+
+    const productos =
+        obtenerProductos();
+
+    const destacados =
+        productos.filter(
+            p => p.destacado
+        );
+
+    res.render(
+        "pages/index",
+        {
+            productos:destacados,
+            admin:req.session.admin || false
+        }
+    );
+
+});
 
 /* =========================
    NUEVOS
 ========================= */
 
-app.get(
-    "/nuevos",
-    (req,res)=>{
+app.get("/nuevos",(req,res)=>{
 
-        const productos =
-            obtenerProductos()
-                .filter(
-                    p => p.nuevo
-                );
+    const productos =
+        obtenerProductos();
 
-        res.render(
-            "pages/index",
-            {
-                productos
-            }
+    const nuevos =
+        productos.filter(
+            p => p.nuevo
         );
 
-    }
-);
+    res.render(
+        "pages/index",
+        {
+            productos:nuevos,
+            admin:req.session.admin || false
+        }
+    );
+
+});
 
 /* =========================
    PRODUCTO
@@ -307,17 +201,16 @@ app.get(
 
         if(!producto){
 
-            return res.send(
-                "Producto no encontrado"
-            );
-
+            return res.redirect("/");
         }
 
         res.render(
             "pages/producto",
             {
                 producto,
-                productos
+                admin:
+                    req.session.admin
+                    || false
             }
         );
 
@@ -333,7 +226,92 @@ app.get(
     (req,res)=>{
 
         res.render(
-            "pages/carrito"
+            "pages/carrito",
+            {
+                admin:
+                    req.session.admin
+                    || false
+            }
+        );
+
+    }
+);
+
+/* =========================
+   LOGIN ADMIN
+========================= */
+
+app.get(
+    "/login-admin",
+    (req,res)=>{
+
+        res.render(
+            "pages/login",
+            {
+                error:null,
+                admin:false
+            }
+        );
+
+    }
+);
+
+app.post(
+    "/login-admin",
+    (req,res)=>{
+
+        const {
+            usuario,
+            password
+        } = req.body;
+
+        // CAMBIAR DESPUES
+
+        const ADMIN_USER =
+            "admin";
+
+        const ADMIN_PASS =
+            "1234";
+
+        if(
+            usuario === ADMIN_USER
+            &&
+            password === ADMIN_PASS
+        ){
+
+            req.session.admin = true;
+
+            return res.redirect(
+                "/admin"
+            );
+
+        }
+
+        res.render(
+            "pages/login",
+            {
+                error:"Usuario o contraseña incorrectos",
+                admin:false
+            }
+        );
+
+    }
+);
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+app.get(
+    "/logout",
+    (req,res)=>{
+
+        req.session.destroy(
+            () => {
+
+                res.redirect("/");
+            }
         );
 
     }
@@ -347,12 +325,11 @@ const PORT = 3000;
 
 app.listen(
     PORT,
-    ()=>{
+    () => {
 
-        console.log(`
-Servidor iniciado:
-http://localhost:${PORT}
-        `);
+        console.log(
+            `Servidor corriendo en http://localhost:${PORT}`
+        );
 
     }
 );

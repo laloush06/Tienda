@@ -24,34 +24,44 @@
     <main class="login-page">
 
         <form
-            action="/login"
+            action="/login-admin"
             method="POST"
             class="login-form">
 
             <h1>
-                Admin Login
+
+                Login Admin
+
             </h1>
 
             <% if(error){ %>
 
-                <p class="login-error">
+                <div class="login-error">
 
                     <%= error %>
 
-                </p>
+                </div>
 
             <% } %>
 
             <input
+
                 type="text"
+
                 name="usuario"
+
                 placeholder="Usuario"
+
                 required>
 
             <input
+
                 type="password"
+
                 name="password"
+
                 placeholder="Contraseña"
+
                 required>
 
             <button type="submit">
@@ -67,3 +77,4 @@
 </body>
 
 </html>
+

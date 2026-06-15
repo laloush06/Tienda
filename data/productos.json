@@ -3,23 +3,35 @@
     "id": 1,
     "nombre": "Camiseta Argentina Titular 2026",
     "tipo": "Camiseta",
-    "categoria": "Selecciones",
+    "categoria": "Camiseta",
     "equipo": "Argentina",
     "temporada": "2026",
     "precio": 39999,
     "imagenes": [
-      "/img/argentina.jpg",
-      "/img/argentina2.jpg",
-      "/img/argentina3.jpg",
-      "/img/argentina4.jpg"
+      "/img/1781482901900-Captura de pantalla 2025-10-13 113802.png"
     ],
     "talles": [
+      "XS",
       "S",
       "M",
       "L",
       "XL",
       "XXL"
-    ]
+    ],
+    "precioOriginal": 39999,
+    "precioOferta": 0,
+    "stock": {
+      "XS": 0,
+      "S": 0,
+      "M": 0,
+      "L": 0,
+      "XL": 0,
+      "XXL": 0
+    },
+    "descripcion": "Sin descripcion",
+    "nuevo": false,
+    "oferta": false,
+    "destacado": false
   },
   {
     "id": 2,
@@ -145,13 +157,32 @@
     "tipo": "Club",
     "categoria": "Camiseta",
     "talles": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
       "XXL"
     ],
     "imagenes": [
       "/uploads/1781466876925-20613805-1200-auto.webp",
       "/uploads/1781466876926-20613806-1200-auto.webp",
       "/uploads/1781466876926-20613807-1200-auto.webp"
-    ]
+    ],
+    "precioOriginal": 10000,
+    "precioOferta": 0,
+    "stock": {
+      "XS": 1,
+      "S": 1,
+      "M": 0,
+      "L": 0,
+      "XL": 0,
+      "XXL": 0
+    },
+    "descripcion": "d",
+    "nuevo": false,
+    "oferta": false,
+    "destacado": false
   },
   {
     "id": 10,
@@ -206,19 +237,34 @@
   {
     "id": 13,
     "nombre": "Camiseta Argentina",
-    "precio": 149999,
+    "precio": 129000,
     "equipo": "Argentina",
     "categoria": "Camiseta",
     "descripcion": "Camiseta Titular",
     "talles": [
-      "S"
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
     ],
     "imagenes": [
       "/img/1781469797654-descarga (1).jfif"
     ],
     "nuevo": true,
-    "oferta": false,
-    "destacado": false
+    "oferta": true,
+    "destacado": false,
+    "precioOriginal": 149999,
+    "precioOferta": 129000,
+    "stock": {
+      "XS": 2,
+      "S": 0,
+      "M": 3,
+      "L": 1,
+      "XL": 0,
+      "XXL": 0
+    }
   },
   {
     "id": 14,
@@ -234,5 +280,23 @@
     "nuevo": false,
     "oferta": false,
     "destacado": false
+  },
+  {
+    "id": 15,
+    "nombre": "A",
+    "precio": 12,
+    "precioOriginal": 12,
+    "precioOferta": 0,
+    "stock": null,
+    "equipo": "Boca",
+    "categoria": "Camiseta",
+    "descripcion": "aa",
+    "talles": [
+      null
+    ],
+    "imagenes": [],
+    "nuevo": false,
+    "oferta": false,
+    "destacado": true
   }
 ]

@@ -16,10 +16,7 @@ const storage = multer.diskStorage({
 
     destination:(req,file,cb)=>{
 
-        cb(
-            null,
-            "public/img"
-        );
+        cb(null,"public/img");
 
     },
 
@@ -41,7 +38,7 @@ const upload = multer({
 });
 
 /* =========================
-   JSON PATH
+   JSON
 ========================= */
 
 const productosPath =
@@ -81,10 +78,40 @@ function guardarProductos(productos){
 }
 
 /* =========================
-   ADMIN HOME
+   STOCK
+========================= */
+
+function crearStock(body){
+
+    return {
+
+        XS:Number(body.stockXS || 0),
+
+        S:Number(body.stockS || 0),
+
+        M:Number(body.stockM || 0),
+
+        L:Number(body.stockL || 0),
+
+        XL:Number(body.stockXL || 0),
+
+        XXL:Number(body.stockXXL || 0)
+
+    };
+
+}
+
+/* =========================
+   ADMIN PAGE
 ========================= */
 
 router.get("/", (req,res)=>{
+
+    if(!req.session.admin){
+
+        return res.redirect("/");
+
+    }
 
     const productos =
         obtenerProductos();
@@ -93,7 +120,8 @@ router.get("/", (req,res)=>{
         "pages/admin",
         {
             productos,
-            productoEditar:null
+            productoEditar:null,
+            admin:true
         }
     );
 
@@ -108,12 +136,36 @@ router.post(
     upload.array("imagenes",10),
     (req,res)=>{
 
+        if(!req.session.admin){
+
+            return res.redirect("/");
+
+        }
+
         const productos =
             obtenerProductos();
 
+        const stock =
+            crearStock(req.body);
+
         const imagenes =
-            req.files.map(file =>
-                "/img/" + file.filename
+            req.files &&
+            req.files.length > 0
+                ? req.files.map(
+                    file =>
+                        "/img/" +
+                        file.filename
+                )
+                : [];
+
+        const precioOriginal =
+            Number(
+                req.body.precioOriginal
+            );
+
+        const precioOferta =
+            Number(
+                req.body.precioOferta || 0
             );
 
         const nuevoProducto = {
@@ -127,9 +179,16 @@ router.post(
 
             nombre:req.body.nombre,
 
-            precio:Number(
-                req.body.precio
-            ),
+            precio:
+                precioOferta > 0
+                    ? precioOferta
+                    : precioOriginal,
+
+            precioOriginal,
+
+            precioOferta,
+
+            stock,
 
             equipo:req.body.equipo,
 
@@ -137,12 +196,14 @@ router.post(
 
             descripcion:req.body.descripcion,
 
-            talles:
-                Array.isArray(
-                    req.body.talles
-                )
-                ? req.body.talles
-                : [req.body.talles],
+            talles:[
+                "XS",
+                "S",
+                "M",
+                "L",
+                "XL",
+                "XXL"
+            ],
 
             imagenes,
 
@@ -150,7 +211,7 @@ router.post(
                 req.body.nuevo === "on",
 
             oferta:
-                req.body.oferta === "on",
+                precioOferta > 0,
 
             destacado:
                 req.body.destacado === "on"
@@ -165,9 +226,7 @@ router.post(
             productos
         );
 
-        res.redirect(
-            "/admin"
-        );
+        res.redirect("/admin");
 
     }
 );
@@ -179,6 +238,12 @@ router.post(
 router.get(
     "/editar/:id",
     (req,res)=>{
+
+        if(!req.session.admin){
+
+            return res.redirect("/");
+
+        }
 
         const productos =
             obtenerProductos();
@@ -202,7 +267,8 @@ router.get(
             "pages/admin",
             {
                 productos,
-                productoEditar
+                productoEditar,
+                admin:true
             }
         );
 
@@ -210,13 +276,19 @@ router.get(
 );
 
 /* =========================
-   GUARDAR EDICION
+   EDITAR
 ========================= */
 
 router.post(
     "/editar/:id",
     upload.array("imagenes",10),
     (req,res)=>{
+
+        if(!req.session.admin){
+
+            return res.redirect("/");
+
+        }
 
         const productos =
             obtenerProductos();
@@ -236,17 +308,29 @@ router.post(
 
         }
 
-        // =========================
-        // ACTUALIZAR CAMPOS
-        // =========================
+        const stock =
+            crearStock(req.body);
 
         producto.nombre =
             req.body.nombre;
 
-        producto.precio =
+        producto.precioOriginal =
             Number(
-                req.body.precio
+                req.body.precioOriginal
             );
+
+        producto.precioOferta =
+            Number(
+                req.body.precioOferta || 0
+            );
+
+        producto.precio =
+            producto.precioOferta > 0
+                ? producto.precioOferta
+                : producto.precioOriginal;
+
+        producto.stock =
+            stock;
 
         producto.equipo =
             req.body.equipo;
@@ -257,25 +341,14 @@ router.post(
         producto.descripcion =
             req.body.descripcion;
 
-        producto.talles =
-            Array.isArray(
-                req.body.talles
-            )
-            ? req.body.talles
-            : [req.body.talles];
-
         producto.nuevo =
             req.body.nuevo === "on";
-
-        producto.oferta =
-            req.body.oferta === "on";
 
         producto.destacado =
             req.body.destacado === "on";
 
-        // =========================
-        // NUEVAS IMAGENES
-        // =========================
+        producto.oferta =
+            producto.precioOferta > 0;
 
         if(
             req.files &&
@@ -291,17 +364,11 @@ router.post(
 
         }
 
-        // =========================
-        // GUARDAR JSON
-        // =========================
-
         guardarProductos(
             productos
         );
 
-        res.redirect(
-            "/admin"
-        );
+        res.redirect("/admin");
 
     }
 );
@@ -313,6 +380,12 @@ router.post(
 router.post(
     "/eliminar/:id",
     (req,res)=>{
+
+        if(!req.session.admin){
+
+            return res.redirect("/");
+
+        }
 
         let productos =
             obtenerProductos();
@@ -328,9 +401,7 @@ router.post(
             productos
         );
 
-        res.redirect(
-            "/admin"
-        );
+        res.redirect("/admin");
 
     }
 );

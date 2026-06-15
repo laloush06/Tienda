@@ -1,53 +1,96 @@
 <header class="header">
 
-    <!-- LOGO -->
+    <a
+        href="/"
+        class="logo">
 
-    <div class="logo">
+        FUTBOL STORE
 
-        <a
-            href="/"
-            class="logo-link">
+    </a>
 
-            Camisetas del Mundo
-
-        </a>
-
-    </div>
-
-    <!-- BUSCADOR -->
-
-    <div class="search-container">
+    <form
+        action="/"
+        method="GET"
+        class="search-form">
 
         <input
+
             type="text"
-            id="searchInput"
-            placeholder="Buscar productos...">
 
-    </div>
+            name="search"
 
-    <!-- NAV -->
+            placeholder="Buscar productos..."
 
-    <nav class="nav-icons">
+            class="search-input">
+
+    </form>
+
+    <div class="header-right">
 
         <a href="/">
-
             Inicio
-
         </a>
 
         <a href="/carrito">
-
             Carrito
-            (<span id="cartCount">0</span>)
-
         </a>
 
-        <a href="/admin">
+        <% if(admin){ %>
 
-            Admin
+            <a href="/admin">
+                Admin
+            </a>
 
-        </a>
+            <a href="/logout">
+                Logout
+            </a>
 
-    </nav>
+        <% } %>
+
+    </div>
 
 </header>
+
+<nav class="menu">
+
+    <ul>
+
+        <li>
+            <a href="/">
+                Inicio
+            </a>
+        </li>
+
+        <li>
+            <a href="/selecciones">
+                Selecciones
+            </a>
+        </li>
+
+        <li>
+            <a href="/clubes">
+                Clubes
+            </a>
+        </li>
+
+        <li>
+            <a href="/retro">
+                Retro
+            </a>
+        </li>
+
+        <li>
+            <a href="/entrenamiento">
+                Entrenamiento
+            </a>
+        </li>
+
+        <li>
+            <a href="/ofertas">
+                Ofertas
+            </a>
+        </li>
+
+    </ul>
+
+</nav>

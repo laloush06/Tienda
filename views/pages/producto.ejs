@@ -25,24 +25,6 @@
 
     <%- include("../partials/header") %>
 
-    <!-- MENU -->
-
-    <nav class="menu">
-
-        <ul>
-
-            <li><a href="/">Inicio</a></li>
-
-            <li><a href="/destacados">Destacados</a></li>
-
-            <li><a href="/ofertas">Ofertas</a></li>
-
-            <li><a href="/nuevos">Nuevos</a></li>
-
-        </ul>
-
-    </nav>
-
     <!-- PRODUCTO -->
 
     <section class="product-page-wrapper">
@@ -75,7 +57,7 @@
 
                 </div>
 
-                <!-- IMAGEN PRINCIPAL -->
+                <!-- IMAGEN -->
 
                 <div class="main-image-container">
 
@@ -96,6 +78,20 @@
             <!-- INFO -->
 
             <div class="product-info">
+
+                <% if(admin){ %>
+
+                    <a
+
+                        href="/admin/editar/<%= producto.id %>"
+
+                        class="admin-edit-product-btn">
+
+                        Editar producto
+
+                    </a>
+
+                <% } %>
 
                 <!-- BADGES -->
 
@@ -149,7 +145,36 @@
 
                 </h1>
 
-                <!-- PRECIO -->
+                <!-- PRECIOS -->
+
+                <% if(producto.precioOferta > 0){ %>
+
+                    <div class="product-price-wrapper">
+
+                        <span class="old-price">
+
+                            $<%= producto.precioOriginal.toLocaleString("es-AR") %>
+
+                        </span>
+
+                        <span class="discount-badge">
+
+                            -<%= Math.round(
+                                (
+                                    (
+                                        producto.precioOriginal -
+                                        producto.precioOferta
+                                    )
+                                    /
+                                    producto.precioOriginal
+                                ) * 100
+                            ) %>%
+
+                        </span>
+
+                    </div>
+
+                <% } %>
 
                 <p class="product-price">
 
@@ -165,6 +190,16 @@
 
                 </p>
 
+                <!-- STOCK -->
+
+                <div
+                    id="stockMessage"
+                    class="stock-message">
+
+                    Seleccioná un talle
+
+                </div>
+
                 <!-- TALLES -->
 
                 <div class="size-section">
@@ -177,10 +212,32 @@
 
                     <div class="sizes">
 
-                        <% producto.talles.forEach(talle => { %>
+                        <% ["XS","S","M","L","XL","XXL"].forEach(talle => {
+
+                            const stock =
+                                producto.stock
+                                ? Number(producto.stock[talle] || 0)
+                                : 0;
+
+                            const agotado =
+                                stock <= 0;
+
+                        %>
 
                             <button
-                                class="size-btn">
+
+                                type="button"
+
+                                class="
+                                    size-btn
+                                    <%= agotado ? 'disabled-size' : '' %>
+                                "
+
+                                data-stock="<%= stock %>"
+
+                                data-size="<%= talle %>"
+
+                                <%= agotado ? 'disabled' : '' %>>
 
                                 <%= talle %>
 
@@ -238,7 +295,7 @@
 
     </section>
 
-    <!-- DESCRIPCION COMPLETA -->
+    <!-- DESCRIPCION -->
 
     <section class="product-extra-description">
 
@@ -256,191 +313,198 @@
 
     </section>
 
-    <!-- RELACIONADOS -->
-
-    <section class="related-products-section">
-
-        <div class="products-topbar">
-
-            <h2>
-
-                También te puede interesar
-
-            </h2>
-
-        </div>
-
-        <div class="products">
-
-            <% productos
-                .filter(p => p.id !== producto.id)
-                .slice(0,4)
-                .forEach(relacionado => { %>
-
-                <article class="product-card">
-
-                    <a
-                        href="/producto/<%= relacionado.id %>">
-
-                        <img
-                            src="<%= relacionado.imagenes[0] %>"
-                            alt="<%= relacionado.nombre %>">
-
-                        <div class="product-info-card">
-
-                            <h3>
-
-                                <%= relacionado.nombre %>
-
-                            </h3>
-
-                            <p class="price">
-
-                                $<%= relacionado.precio.toLocaleString("es-AR") %>
-
-                            </p>
-
-                            <button class="view-product-btn">
-
-                                Ver producto
-
-                            </button>
-
-                        </div>
-
-                    </a>
-
-                </article>
-
-            <% }) %>
-
-        </div>
-
-    </section>
-
     <%- include("../partials/footer") %>
 
     <script>
 
-        // =========================
-        // CAMBIAR IMAGEN
-        // =========================
+    // =========================
+    // CAMBIAR IMAGEN
+    // =========================
 
-        function cambiarImagen(src){
+    function cambiarImagen(src){
 
-            document
-                .getElementById("mainImage")
-                .src = src;
+        document
+            .getElementById("mainImage")
+            .src = src;
 
-        }
+    }
 
-        // =========================
-        // TALLES
-        // =========================
+    // =========================
+    // STOCK
+    // =========================
 
-        let talleSeleccionado = null;
+    let talleSeleccionado = null;
 
-        const sizeButtons =
-            document.querySelectorAll(
-                ".size-btn"
-            );
+    const stockMessage =
+        document.getElementById(
+            "stockMessage"
+        );
 
-        sizeButtons.forEach(btn => {
+    const addToCartBtn =
+        document.getElementById(
+            "addToCartBtn"
+        );
 
-            btn.addEventListener(
-                "click",
-                () => {
+    const sizeButtons =
+        document.querySelectorAll(
+            ".size-btn:not(.disabled-size)"
+        );
 
-                    sizeButtons.forEach(b =>
-                        b.classList.remove(
-                            "active-size"
-                        )
-                    );
+    sizeButtons.forEach(btn => {
 
-                    btn.classList.add(
-                        "active-size"
-                    );
-
-                    talleSeleccionado =
-                        btn.textContent.trim();
-
-                }
-            );
-
-        });
-
-        // =========================
-        // CARRITO
-        // =========================
-
-        const addToCartBtn =
-            document.getElementById(
-                "addToCartBtn"
-            );
-
-        addToCartBtn.addEventListener(
+        btn.addEventListener(
             "click",
             () => {
 
-                if(!talleSeleccionado){
+                sizeButtons.forEach(b =>
+                    b.classList.remove(
+                        "active-size"
+                    )
+                );
 
-                    alert(
-                        "Seleccioná un talle"
+                btn.classList.add(
+                    "active-size"
+                );
+
+                talleSeleccionado =
+                    btn.dataset.size;
+
+                const stock =
+                    Number(
+                        btn.dataset.stock
                     );
 
-                    return;
+                if(stock === 1){
+
+                    stockMessage.innerHTML =
+                        "Última unidad disponible";
+
+                    stockMessage.className =
+                        "stock-message low-stock";
+
+                } else {
+
+                    stockMessage.innerHTML =
+                        `Stock disponible: ${stock}`;
+
+                    stockMessage.className =
+                        "stock-message in-stock";
 
                 }
-
-                const cantidad =
-                    Number(
-                        document
-                            .getElementById(
-                                "cantidad"
-                            ).value
-                    );
-
-                const productoCarrito = {
-
-                    id:<%= producto.id %>,
-
-                    nombre:`<%= producto.nombre %>`,
-
-                    precio:<%= producto.precio %>,
-
-                    imagen:`<%= producto.imagenes[0] %>`,
-
-                    talle:talleSeleccionado,
-
-                    cantidad
-
-                };
-
-                let cart =
-                    JSON.parse(
-                        localStorage.getItem(
-                            "cart"
-                        )
-                    ) || [];
-
-                cart.push(
-                    productoCarrito
-                );
-
-                localStorage.setItem(
-                    "cart",
-                    JSON.stringify(cart)
-                );
-
-                alert(
-                    "Producto agregado"
-                );
 
             }
         );
 
-    </script>
+    });
+
+    // =========================
+    // ADD TO CART
+    // =========================
+
+    addToCartBtn.addEventListener(
+        "click",
+        () => {
+
+            if(!talleSeleccionado){
+
+                alert(
+                    "Seleccioná un talle"
+                );
+
+                return;
+
+            }
+
+            const cantidad =
+                Number(
+                    document.getElementById(
+                        "cantidad"
+                    ).value
+                );
+
+            const producto = {
+
+                id:
+                    <%= producto.id %>,
+
+                nombre:
+                    "<%= producto.nombre %>",
+
+                precio:
+                    <%= producto.precio %>,
+
+                talle:
+                    talleSeleccionado,
+
+                cantidad,
+
+                imagen:
+                    "<%= producto.imagenes[0] || '' %>"
+
+            };
+
+            let cart =
+                JSON.parse(
+                    localStorage.getItem(
+                        "cart"
+                    )
+                ) || [];
+
+            cart.push(producto);
+
+            localStorage.setItem(
+                "cart",
+                JSON.stringify(cart)
+            );
+
+            actualizarContador();
+
+            alert(
+                "Producto agregado al carrito"
+            );
+
+        }
+    );
+
+    // =========================
+    // CART COUNTER
+    // =========================
+
+    function actualizarContador(){
+
+        const cart =
+            JSON.parse(
+                localStorage.getItem(
+                    "cart"
+                )
+            ) || [];
+
+        const total =
+            cart.reduce(
+                (acc,item)=>
+                    acc + item.cantidad,
+                0
+            );
+
+        const cartText =
+            document.querySelector(
+                '.header-right a[href="/carrito"]'
+            );
+
+        if(cartText){
+
+            cartText.textContent =
+                `Carrito (${total})`;
+
+        }
+
+    }
+
+    actualizarContador();
+
+</script>
 
 </body>
 
 </html>
+
