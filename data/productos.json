@@ -1,39 +1,5 @@
 [
   {
-    "id": 1,
-    "nombre": "Camiseta Argentina Titular 2026",
-    "tipo": "Camiseta",
-    "categoria": "Camiseta",
-    "equipo": "Argentina",
-    "temporada": "2026",
-    "precio": 39999,
-    "imagenes": [
-      "/img/1781482901900-Captura de pantalla 2025-10-13 113802.png"
-    ],
-    "talles": [
-      "XS",
-      "S",
-      "M",
-      "L",
-      "XL",
-      "XXL"
-    ],
-    "precioOriginal": 39999,
-    "precioOferta": 0,
-    "stock": {
-      "XS": 0,
-      "S": 0,
-      "M": 0,
-      "L": 0,
-      "XL": 0,
-      "XXL": 0
-    },
-    "descripcion": "Sin descripcion",
-    "nuevo": false,
-    "oferta": false,
-    "destacado": false
-  },
-  {
     "id": 2,
     "nombre": "Camiseta Boca Titular 2026",
     "tipo": "Camiseta",

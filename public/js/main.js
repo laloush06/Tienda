@@ -1,5 +1,5 @@
 // =========================
-// FILTER ACCORDION
+// ACCORDION
 // =========================
 
 const toggles =
@@ -23,12 +23,16 @@ toggles.forEach(toggle => {
             const span =
                 toggle.querySelector("span");
 
-            span.textContent =
-                content.classList.contains(
-                    "active-filter"
-                )
-                    ? "-"
-                    : "+";
+            if(span){
+
+                span.textContent =
+                    content.classList.contains(
+                        "active-filter"
+                    )
+                        ? "-"
+                        : "+";
+
+            }
 
         }
     );
@@ -48,60 +52,191 @@ if(searchInput){
 
     searchInput.addEventListener(
         "input",
-        () => {
+        aplicarFiltros
+    );
 
-            const value =
-                searchInput.value
-                    .toLowerCase();
+}
 
-            const cards =
-                document.querySelectorAll(
-                    ".product-card"
-                );
+// =========================
+// FILTERS
+// =========================
 
-            let visibles = 0;
+const filterSizes =
+    document.querySelectorAll(
+        ".filter-size"
+    );
 
-            cards.forEach(card => {
+const filterTypes =
+    document.querySelectorAll(
+        ".filter-type"
+    );
 
-                const title =
-                    card.querySelector("h3")
-                        .textContent
-                        .toLowerCase();
+const filterTeams =
+    document.querySelectorAll(
+        ".filter-team"
+    );
 
-                if(
-                    title.includes(value)
-                ){
+[
+    ...filterSizes,
+    ...filterTypes,
+    ...filterTeams
+].forEach(filter => {
 
-                    card.style.display =
-                        "flex";
+    filter.addEventListener(
+        "change",
+        aplicarFiltros
+    );
 
-                    visibles++;
+});
 
-                } else {
+// =========================
+// FILTER FUNCTION
+// =========================
 
-                    card.style.display =
-                        "none";
+function aplicarFiltros(){
 
-                }
+    const search =
+        searchInput
+            ? searchInput.value.toLowerCase()
+            : "";
 
-            });
+    const tallesSeleccionados =
+        [...filterSizes]
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
 
-            const noResults =
-                document.getElementById(
-                    "noResults"
-                );
+    const categoriasSeleccionadas =
+        [...filterTypes]
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
 
-            if(noResults){
+    const equiposSeleccionados =
+        [...filterTeams]
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
 
-                noResults.style.display =
-                    visibles === 0
-                        ? "block"
-                        : "none";
+    const cards =
+        document.querySelectorAll(
+            ".product-card"
+        );
 
-            }
+    let visibles = 0;
+
+    cards.forEach(card => {
+
+        const nombre =
+            card.querySelector("h3")
+                .textContent
+                .toLowerCase();
+
+        const equipo =
+            card.dataset.equipo;
+
+        const categoria =
+            card.dataset.categoria;
+
+        const stock =
+            JSON.parse(
+                card.dataset.stock || "{}"
+            );
+
+        // =========================
+        // SEARCH
+        // =========================
+
+        const coincideSearch =
+            nombre.includes(search);
+
+        // =========================
+        // TALLES
+        // =========================
+
+        const coincideTalles =
+
+            tallesSeleccionados.length === 0
+
+            ||
+
+            tallesSeleccionados.some(
+                talle =>
+                    Number(
+                        stock[talle] || 0
+                    ) > 0
+            );
+
+        // =========================
+        // CATEGORY
+        // =========================
+
+        const coincideCategoria =
+
+            categoriasSeleccionadas.length === 0
+
+            ||
+
+            categoriasSeleccionadas.includes(
+                categoria
+            );
+
+        // =========================
+        // TEAM
+        // =========================
+
+        const coincideEquipo =
+
+            equiposSeleccionados.length === 0
+
+            ||
+
+            equiposSeleccionados.includes(
+                equipo
+            );
+
+        // =========================
+        // SHOW / HIDE
+        // =========================
+
+        const mostrar =
+
+            coincideSearch
+            &&
+            coincideTalles
+            &&
+            coincideCategoria
+            &&
+            coincideEquipo;
+
+        if(mostrar){
+
+            card.style.display =
+                "flex";
+
+            visibles++;
 
         }
-    );
+
+        else{
+
+            card.style.display =
+                "none";
+
+        }
+
+    });
+
+    const noResults =
+        document.getElementById(
+            "noResults"
+        );
+
+    if(noResults){
+
+        noResults.style.display =
+            visibles === 0
+                ? "block"
+                : "none";
+
+    }
 
 }
 
@@ -120,7 +255,23 @@ if(clearBtn){
         "click",
         () => {
 
-            location.reload();
+            [
+                ...filterSizes,
+                ...filterTypes,
+                ...filterTeams
+            ].forEach(filter => {
+
+                filter.checked = false;
+
+            });
+
+            if(searchInput){
+
+                searchInput.value = "";
+
+            }
+
+            aplicarFiltros();
 
         }
     );
@@ -145,14 +296,14 @@ function actualizarContador(){
             0
         );
 
-    const cartText =
+    const cartLink =
         document.querySelector(
             '.header-right a[href="/carrito"]'
         );
 
-    if(cartText){
+    if(cartLink){
 
-        cartText.textContent =
+        cartLink.textContent =
             `Carrito (${total})`;
 
     }
@@ -160,3 +311,4 @@ function actualizarContador(){
 }
 
 actualizarContador();
+

@@ -180,13 +180,13 @@
 
             </div>
 
-            <!-- <div
+            <div
                 id="noResults"
                 class="no-results">
 
                 No se encontraron productos.
 
-            </div> -->
+            </div>
 
             <div
                 class="products"
@@ -207,7 +207,7 @@
 
                         data-categoria="<%= producto.categoria %>"
 
-                        data-talles="<%= producto.talles.join(' ') %>">
+                        data-stock='<%- JSON.stringify(producto.stock || {}) %>'>
 
                         <% if(producto.nuevo){ %>
 
@@ -243,9 +243,21 @@
                             href="/producto/<%= producto.id %>"
                             class="product-link">
 
-                            <img
-                                src="<%= producto.imagenes[0] %>"
-                                alt="<%= producto.nombre %>">
+                            <% if(producto.imagenes && producto.imagenes[0]){ %>
+
+                                <img
+                                    src="<%= producto.imagenes[0] %>"
+                                    alt="<%= producto.nombre %>">
+
+                            <% } else { %>
+
+                                <div class="product-image-placeholder">
+
+                                    ⚽
+
+                                </div>
+
+                            <% } %>
 
                             <div class="product-info-card">
 
