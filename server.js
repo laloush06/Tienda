@@ -58,7 +58,7 @@ app.use(
 
 app.use(
     session({
-        secret:"tienda-secret",
+        secret:process.env.SESSION_SECRET,
         resave:false,
         saveUninitialized:true
     })
@@ -341,10 +341,11 @@ app.post(
         } = req.body;
 
         const ADMIN_USER =
-            "admin";
+            process.env.ADMIN_USER;
 
         const ADMIN_PASS =
-            "1234";
+            process.env.ADMIN_PASS;
+
 
         if(
             usuario === ADMIN_USER
