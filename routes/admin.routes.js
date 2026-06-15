@@ -330,7 +330,7 @@ router.post(
             const productoId =
                 Number(req.params.id);
 
-            const imagenesActuales =
+            const productoActual =
                 await prisma.producto.findUnique({
 
                     where:{
@@ -339,15 +339,40 @@ router.post(
 
                 });
 
+            // =========================
+            // IMAGENES ACTUALES
+            // =========================
+
             let imagenes =
-                imagenesActuales.imagenes;
+                [...productoActual.imagenes];
+
+            // =========================
+            // ELIMINAR IMAGENES
+            // =========================
+
+            const imagenesEliminar =
+                req.body.imagenesEliminar
+                ? JSON.parse(
+                    req.body.imagenesEliminar
+                )
+                : [];
+
+            imagenes =
+                imagenes.filter(
+
+                    img =>
+                        !imagenesEliminar.includes(img)
+
+                );
+
+            // =========================
+            // NUEVAS IMAGENES
+            // =========================
 
             if(
                 req.files &&
                 req.files.length > 0
             ){
-
-                imagenes = [];
 
                 for(const file of req.files){
 
@@ -371,6 +396,10 @@ router.post(
 
             }
 
+            // =========================
+            // PRECIOS
+            // =========================
+
             const precioOriginal =
                 Number(
                     req.body.precioOriginal
@@ -380,6 +409,10 @@ router.post(
                 Number(
                     req.body.precioOferta || 0
                 );
+
+            // =========================
+            // UPDATE
+            // =========================
 
             await prisma.producto.update({
 
@@ -425,6 +458,10 @@ router.post(
 
             });
 
+            // =========================
+            // STOCK
+            // =========================
+
             const stock =
                 crearStock(req.body);
 
@@ -464,6 +501,7 @@ router.post(
 
     }
 );
+
 
 /* =========================
    ELIMINAR

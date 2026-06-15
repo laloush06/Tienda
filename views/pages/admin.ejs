@@ -304,63 +304,97 @@
 
             </div>
 
-            <!-- =========================
-                 IMAGENES
-            ========================= -->
+<!-- =========================
+     IMAGENES
+========================= -->
 
-            <div class="image-upload-wrapper">
+<div class="image-upload-wrapper">
 
-                <h2>
+    <h2>
 
-                    Seleccionar imágenes
+        Seleccionar imágenes
 
-                </h2>
+    </h2>
 
-                <div class="image-upload-grid">
+    <input
+        type="hidden"
+        id="imagenesExistentes"
+        name="imagenesExistentes"
+        value='<%= JSON.stringify(
+            editar && editar.imagenes
+                ? editar.imagenes
+                : []
+        ) %>'>
 
-                    <% for(let i = 0; i < 5; i++){ %>
+    <div class="image-upload-grid">
 
-                        <label class="image-upload-card">
+        <% for(let i = 0; i < 5; i++){ %>
 
-                            <input
+            <label class="image-upload-card">
 
-                                type="file"
+                <input
 
-                                name="imagenes"
+                    type="file"
 
-                                accept="image/*"
+                    name="imagenes"
 
-                                class="image-input"
+                    accept="image/*"
 
-                                onchange="previewImage(event, <%= i %>)">
+                    class="image-input"
 
-                            <div
-                                class="image-preview"
-                                id="preview-<%= i %>">
+                    onchange="previewImage(event, <%= i %>)">
 
-                                <span>
+                <div
+                    class="image-preview"
+                    id="preview-<%= i %>">
 
-                                    +
+                    <% if(
+                        editar &&
+                        editar.imagenes &&
+                        editar.imagenes[i]
+                    ){ %>
 
-                                </span>
+                        <button
+                            type="button"
+                            class="delete-image-btn"
+                            onclick="eliminarImagen(event, <%= i %>)">
 
-                                <p>
+                            ×
 
-                                    <%= i === 0
-                                        ? "Portada"
-                                        : `Imagen ${i + 1}` %>
+                        </button>
 
-                                </p>
+                        <img
+                            src="<%= editar.imagenes[i] %>"
+                            class="preview-img"
+                            alt="preview">
 
-                            </div>
+                    <% } else { %>
 
-                        </label>
+                        <span>
+
+                            +
+
+                        </span>
+
+                        <p>
+
+                            <%= i === 0
+                                ? "Portada"
+                                : `Imagen ${i + 1}` %>
+
+                        </p>
 
                     <% } %>
 
                 </div>
 
-            </div>
+            </label>
+
+        <% } %>
+
+    </div>
+
+</div>
 
             <!-- =========================
                  BOTON
@@ -376,137 +410,314 @@
 
         </form>
 
-        <!-- =========================
-             PRODUCTOS
-        ========================= -->
+```ejs
+<!-- =========================
+     PRODUCTOS
+========================= -->
 
-        <div class="cart-container">
+<div class="admin-list">
 
-            <% productos.forEach(producto => { %>
+    <% productos.forEach(producto => { %>
 
-                <div class="cart-item">
+        <div class="admin-row">
 
-                    <div class="admin-product-left">
+            <!-- IMAGEN -->
 
-                        <img
-                            src="<%= producto.imagenes[0] %>"
-                            class="admin-product-image">
+            <div class="admin-row-image">
 
-                        <div>
+                <img
+                    src="<%= producto.imagenes[0] %>"
+                    alt="<%= producto.nombre %>">
 
-                            <h2>
+            </div>
 
-                                <%= producto.nombre %>
+            <!-- INFO -->
 
-                            </h2>
+            <div class="admin-row-info">
 
-                            <p>
+                <h3>
 
-                                $<%= producto.precio.toLocaleString("es-AR") %>
+                    <%= producto.nombre %>
 
-                            </p>
+                </h3>
 
-                        </div>
+                <p>
 
-                    </div>
+                    $<%= producto.precio.toLocaleString("es-AR") %>
 
-                    <div class="admin-buttons">
+                </p>
 
-                        <a
-                            href="/producto/<%= producto.id %>"
-                            class="go-cart-btn">
+            </div>
 
-                            Ver
+            <!-- STOCK -->
 
-                        </a>
+            <div class="admin-row-stock">
 
-                        <a
-                            href="/admin/editar/<%= producto.id %>"
-                            class="go-cart-btn">
+                <% if(producto.stock){ %>
 
-                            Editar
+                    <% let total = 0; %>
 
-                        </a>
+                    <% producto.stock.forEach(s => { %>
 
-                        <form
-                            action="/admin/eliminar/<%= producto.id %>"
-                            method="POST">
+                        <% total += s.cantidad %>
 
-                            <button
-                                class="remove-btn">
+                    <% }) %>
 
-                                Eliminar
+                    <span>
 
-                            </button>
+                        Stock:
+                        <strong>
+                            <%= total %>
+                        </strong>
 
-                        </form>
+                    </span>
 
-                    </div>
+                <% } %>
 
-                </div>
+            </div>
 
-            <% }) %>
+            <!-- ACCIONES -->
+
+            <div class="admin-row-actions">
+
+                <a
+                    href="/producto/<%= producto.id %>"
+                    class="admin-btn view">
+
+                    Ver
+
+                </a>
+
+                <a
+                    href="/admin/editar/<%= producto.id %>"
+                    class="admin-btn edit">
+
+                    Editar
+
+                </a>
+
+                <form
+                    action="/admin/eliminar/<%= producto.id %>"
+                    method="POST">
+
+                    <button
+                        class="admin-btn delete">
+
+                        Eliminar
+
+                    </button>
+
+                </form>
+
+            </div>
 
         </div>
 
+    <% }) %>
+
+</div>
+
+
     </div>
 
-    <script>
+<script>
 
-    function cambiarStock(id,cambio){
+function cambiarStock(id,cambio){
 
-        const input =
-            document.getElementById(id);
+    const input =
+        document.getElementById(id);
 
-        let valor =
-            Number(input.value);
+    let valor =
+        Number(input.value);
 
-        valor += cambio;
+    valor += cambio;
 
-        if(valor < 0){
+    if(valor < 0){
 
-            valor = 0;
+        valor = 0;
+
+    }
+
+    input.value = valor;
+
+}
+
+function previewImage(event,index){
+
+    const file =
+        event.target.files[0];
+
+    if(!file) return;
+
+    const reader =
+        new FileReader();
+
+    reader.onload =
+        function(e){
+
+            const preview =
+                document.getElementById(
+                    `preview-${index}`
+                );
+
+            preview.innerHTML = `
+
+                <button
+                    type="button"
+                    class="delete-image-btn"
+                    onclick="eliminarImagen(event, ${index})">
+
+                    ×
+
+                </button>
+
+                <img
+                    src="${e.target.result}"
+                    class="preview-img"
+                    alt="preview">
+
+            `;
+
+        };
+
+    reader.readAsDataURL(file);
+
+}
+
+function eliminarImagen(event,index){
+
+    event.preventDefault();
+
+    let imagenes =
+        JSON.parse(
+            document.getElementById(
+                "imagenesExistentes"
+            ).value
+        );
+
+    imagenes.splice(index,1);
+
+    document.getElementById(
+        "imagenesExistentes"
+    ).value =
+        JSON.stringify(imagenes);
+
+    actualizarPreviews(imagenes);
+
+}
+
+function actualizarPreviews(imagenes){
+
+    for(let i = 0; i < 5; i++){
+
+        const preview =
+            document.getElementById(
+                `preview-${i}`
+            );
+
+        if(imagenes[i]){
+
+            preview.innerHTML = `
+
+                <button
+                    type="button"
+                    class="delete-image-btn"
+                    onclick="eliminarImagen(event, ${i})">
+
+                    ×
+
+                </button>
+
+                <img
+                    src="${imagenes[i]}"
+                    class="preview-img"
+                    alt="preview">
+
+            `;
+
+        } else {
+
+            preview.innerHTML = `
+
+                <span>
+
+                    +
+
+                </span>
+
+                <p>
+
+                    ${i === 0
+                        ? "Portada"
+                        : `Imagen ${i + 1}`}
+
+                </p>
+
+            `;
 
         }
 
-        input.value = valor;
+    }
+
+}
+
+</script>
+
+<script>
+
+/* =========================
+   GUARDAR SCROLL
+========================= */
+
+window.addEventListener(
+
+    "beforeunload",
+
+    ()=>{
+
+        localStorage.setItem(
+
+            "adminScroll",
+
+            window.scrollY
+
+        );
 
     }
 
-    function previewImage(event,index){
+);
 
-        const file =
-            event.target.files[0];
+/* =========================
+   RESTAURAR SCROLL
+========================= */
 
-        if(!file) return;
+window.addEventListener(
 
-        const reader =
-            new FileReader();
+    "load",
 
-        reader.onload =
-            function(e){
+    ()=>{
 
-                const preview =
-                    document.getElementById(
-                        `preview-${index}`
-                    );
+        const scroll =
+            localStorage.getItem(
+                "adminScroll"
+            );
 
-                preview.innerHTML = `
+        if(scroll){
 
-                    <img
-                        src="${e.target.result}"
-                        class="preview-img"
-                        alt="preview">
+            window.scrollTo(
+                0,
+                Number(scroll)
+            );
 
-                `;
-
-            };
-
-        reader.readAsDataURL(file);
+        }
 
     }
 
-    </script>
+);
+
+</script>
+
+
 
 </body>
 

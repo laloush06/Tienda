@@ -17,6 +17,43 @@
         rel="stylesheet"
         href="/css/styles.css">
 
+    <style>
+
+        .preview-imagenes{
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+            margin:15px 0;
+        }
+
+        .img-box{
+            position:relative;
+        }
+
+        .img-box img{
+            width:120px;
+            height:120px;
+            object-fit:cover;
+            border-radius:10px;
+            border:1px solid #ccc;
+        }
+
+        .btn-eliminar{
+            position:absolute;
+            top:-8px;
+            right:-8px;
+            background:red;
+            color:white;
+            border:none;
+            width:24px;
+            height:24px;
+            border-radius:50%;
+            cursor:pointer;
+            font-weight:bold;
+        }
+
+    </style>
+
 </head>
 
 <body>
@@ -66,9 +103,39 @@
 
             <input
                 type="text"
+                id="imagenesInput"
                 name="imagenes"
                 value="<%= producto.imagenes.join(',') %>"
                 required>
+
+            <% if(producto.imagenes && producto.imagenes.length > 0) { %>
+
+                <div class="preview-imagenes" id="previewContainer">
+
+                    <% producto.imagenes.forEach((imagen, index) => { %>
+
+                        <div class="img-box">
+
+                            <img
+                                src="<%= imagen %>"
+                                alt="preview">
+
+                            <button
+                                type="button"
+                                class="btn-eliminar"
+                                onclick="eliminarImagen(<%= index %>)">
+
+                                ×
+
+                            </button>
+
+                        </div>
+
+                    <% }) %>
+
+                </div>
+
+            <% } %>
 
             <button type="submit">
 
@@ -79,6 +146,22 @@
         </form>
 
     </main>
+
+    <script>
+
+        let imagenes = "<%= producto.imagenes.join(',') %>".split(",");
+
+        function eliminarImagen(index){
+
+            imagenes.splice(index, 1);
+
+            document.getElementById("imagenesInput").value = imagenes.join(",");
+
+            location.reload();
+
+        }
+
+    </script>
 
 </body>
 
