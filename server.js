@@ -1,9 +1,5 @@
 require("dotenv").config();
 
-console.log(process.env.CLOUDINARY_CLOUD_NAME);
-console.log(process.env.CLOUDINARY_API_KEY);
-console.log(process.env.CLOUDINARY_API_SECRET);
-
 const express = require("express");
 
 const app = express();
@@ -13,8 +9,6 @@ const path = require("path");
 const session = require("express-session");
 
 const prisma = require("./prismaClient");
-
-
 
 /* =========================
    CONFIG
@@ -58,40 +52,16 @@ app.use(
 
 app.use(
     session({
-        secret:process.env.SESSION_SECRET,
+
+        secret:
+            process.env.SESSION_SECRET,
+
         resave:false,
-        saveUninitialized:true
+
+        saveUninitialized:false
+
     })
 );
-
-/* =========================
-   HELPERS
-========================= */
-
-function formatearProductos(productos){
-
-    return productos.map(producto => {
-
-        const stockObj = {};
-
-        producto.stock.forEach(s => {
-
-            stockObj[s.talle] =
-                s.cantidad;
-
-        });
-
-        return {
-
-            ...producto,
-
-            stock:stockObj
-
-        };
-
-    });
-
-}
 
 /* =========================
    ROUTES
@@ -127,13 +97,8 @@ app.get("/", async (req,res)=>{
     res.render(
         "pages/index",
         {
-            productos:
-                formatearProductos(
-                    productos
-                ),
-
-            admin:
-                req.session.admin || false
+            productos,
+            admin:req.session.admin || false
         }
     );
 
@@ -161,13 +126,8 @@ app.get("/ofertas", async (req,res)=>{
     res.render(
         "pages/index",
         {
-            productos:
-                formatearProductos(
-                    productos
-                ),
-
-            admin:
-                req.session.admin || false
+            productos,
+            admin:req.session.admin || false
         }
     );
 
@@ -195,13 +155,8 @@ app.get("/destacados", async (req,res)=>{
     res.render(
         "pages/index",
         {
-            productos:
-                formatearProductos(
-                    productos
-                ),
-
-            admin:
-                req.session.admin || false
+            productos,
+            admin:req.session.admin || false
         }
     );
 
@@ -229,13 +184,8 @@ app.get("/nuevos", async (req,res)=>{
     res.render(
         "pages/index",
         {
-            productos:
-                formatearProductos(
-                    productos
-                ),
-
-            admin:
-                req.session.admin || false
+            productos,
+            admin:req.session.admin || false
         }
     );
 
@@ -267,22 +217,10 @@ app.get(
             return res.redirect("/");
         }
 
-        const stockObj = {};
-
-        producto.stock.forEach(s => {
-
-            stockObj[s.talle] =
-                s.cantidad;
-
-        });
-
-        producto.stock = stockObj;
-
         res.render(
             "pages/producto",
             {
                 producto,
-
                 admin:
                     req.session.admin
                     || false
@@ -346,7 +284,6 @@ app.post(
         const ADMIN_PASS =
             process.env.ADMIN_PASS;
 
-
         if(
             usuario === ADMIN_USER
             &&
@@ -384,7 +321,6 @@ app.get(
             () => {
 
                 res.redirect("/");
-
             }
         );
 
@@ -395,7 +331,8 @@ app.get(
    SERVER
 ========================= */
 
-const PORT = 3000;
+const PORT =
+    process.env.PORT || 3000;
 
 app.listen(
     PORT,
@@ -407,4 +344,3 @@ app.listen(
 
     }
 );
-
